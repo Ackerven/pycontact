@@ -1,0 +1,15 @@
+# Ackerven
+# 2021/11/14 11:40
+# config.yaml
+environment:
+  env: Debug
+
+DataBase:
+  url: localhost
+  username: root
+  password: 123456
+
+File:
+  csv: default
+  excel: default
+
