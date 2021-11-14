@@ -7,40 +7,16 @@
 # @Copyright Copyright(C) 2021 Ackerven All rights reserved.
 
 class Contact:
+    count = 0
+
     def __init__(self, name, gender, phone, wx_code):
-        self.__name = name
-        self.__gender = gender
-        self.__phone = phone
-        self.__wx_code = wx_code
+        Contact.count += 1
+        self.id = Contact.count
+        self.name = name
+        self.gender = gender
+        self.phone = phone
+        self.wx_code = wx_code
 
-    @property
-    def name(self):
-        return self.__name
-
-    @name.setter
-    def name(self, name):
-        self.__name = name
-
-    @property
-    def gender(self):
-        return self.__gender
-
-    @gender.setter
-    def gender(self, gender):
-        self.__gender = gender
-
-    @property
-    def phone(self):
-        return self.__phone
-
-    @phone.setter
-    def phone(self, phone):
-        self.__phone = phone
-
-    @property
-    def wx_code(self):
-        return self.__wx_code
-
-    @wx_code.setter
-    def wx_code(self, wx_code):
-        self.__wx_code = wx_code
+    def __str__(self):
+        return "id: {}, name: {}, gender: {}, phone: {}, wx_code: {}". \
+            format(self.id, self.name, self.gender, self.phone, self.wx_code)
