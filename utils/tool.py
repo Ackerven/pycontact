@@ -39,3 +39,13 @@ def save(data):
 def isPhone(phone):
     pattern = re.compile(r'^[0-9]{11}$')
     return True if pattern.match(phone) else False
+
+
+def importData(data, filePath):
+    if config['mode'] == 'csv':
+        csv.loading(data, filePath)
+
+
+def export(data, filePath):
+    if config['mode'] == 'csv':
+        csv.save(data, filePath)

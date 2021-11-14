@@ -19,8 +19,10 @@ def init():
     pass
 
 
-def loading(data):
-    with open(config['File']['csv'], 'r', encoding='utf-8') as fp:
+def loading(data, filePath=None):
+    if filePath is None:
+        filePath = config['File']['csv']
+    with open(filePath, 'r', encoding='utf-8') as fp:
         fp.readline()   # title
         while True:
             line = fp.readline().strip()
@@ -29,10 +31,13 @@ def loading(data):
                 data.append(Contact(tmp[1], tmp[2], tmp[3], tmp[4]))
             else:
                 break
+    print("Successfully loaded data from " + filePath)
 
 
-def save(data):
-    with open(config['File']['csv'], 'w', encoding='utf-8') as fp:
+def save(data, filePath = None):
+    if filePath is None:
+        filePath = config['File']['csv']
+    with open(filePath, 'w', encoding='utf-8') as fp:
         fp.write('id,name,gender,phone,wx_code\n')
         for i in data:
             fp.write(str(i.id) + ','
@@ -41,4 +46,4 @@ def save(data):
                      + i.phone + ','
                      + i.wx_code + '\n'
                      )
-    print("Success to save " + config['File']['csv'])
+    print("Successfully saved to " + filePath)
