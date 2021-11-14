@@ -8,12 +8,10 @@
 
 import os
 import re
-
 import yaml
-
 import utils.csv as csv
 
-file = open('../config.yaml', 'r', encoding='utf-8')
+file = open('config.yaml', 'r', encoding='utf-8')
 config = yaml.load(file, Loader=yaml.FullLoader)
 file.close()
 
