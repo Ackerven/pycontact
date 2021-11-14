@@ -41,9 +41,13 @@ def isPhone(phone):
     return True if pattern.match(phone) else False
 
 
-def importData(data, filePath):
+def importData(data, filePath, overlay=False):
     if config['mode'] == 'csv':
-        csv.loading(data, filePath)
+        if overlay:
+            data.clear()
+            csv.loading(data, filePath)
+        else:
+            csv.loading(data, filePath)
 
 
 def export(data, filePath):
