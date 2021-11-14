@@ -16,6 +16,6 @@ DataBase:
   password: 123456
 
 File:
-  csv: ../source/default.csv
-  excel: ../source/default.xlsx
+  csv: source/default.csv
+  excel: source/default.xlsx
 
