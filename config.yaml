@@ -1,8 +1,12 @@
 # Ackerven
 # 2021/11/14 11:40
 # config.yaml
-environment:
-  env: Debug
+
+# 程序启动时加载数据类型
+mode: csv
+
+# 程序运行环境 Debug or Release
+env: Debug
 
 DataBase:
   url: localhost
@@ -10,6 +14,6 @@ DataBase:
   password: 123456
 
 File:
-  csv: default
-  excel: default
+  csv: ../source/default.csv
+  excel: ../source/default.xlsx
 
