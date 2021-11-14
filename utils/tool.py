@@ -7,6 +7,7 @@
 # @Copyright Copyright(C) 2021 Ackerven All rights reserved.
 
 import os
+import re
 
 import yaml
 
@@ -34,3 +35,7 @@ def save(data):
     if config['mode'] == 'csv':
         csv.save(data)
 
+
+def isPhone(phone):
+    pattern = re.compile(r'^[0-9]{11}$')
+    return True if pattern.match(phone) else False
