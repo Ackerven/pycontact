@@ -7,6 +7,7 @@
 # @Copyright Copyright(C) 2021 Ackerven All rights reserved.
 
 import utils.tool as tool
+from contact.contact import Contact
 
 
 def menu():
@@ -19,9 +20,22 @@ def menu():
     print("6. 导出联系人")
     print("0. 退出")
 
+# TODO filePath
 
-def addContact():
-    print("add")
+def addContact(data):
+    name = input("请输入姓名: ")
+    gender = input("请输入性别: ")
+    while True:
+        phone = input("请输入手机号码: ")
+        if phone == '0':
+            return
+        elif not tool.isPhone(phone):
+            print("格式错误，取消添加请输入0!")
+        else:
+            break
+    wx_code = input("请输入微信号: ")
+    data.append(Contact(name, gender, phone, wx_code))
+    print("Add contact " + name)
 
 
 def delContact():
@@ -44,6 +58,10 @@ def importContact():
     print("import")
 
 
+def showData(data):
+    for i in data:
+        print(i)
+
 def console():
     data = []
     tool.init(data)
@@ -51,7 +69,7 @@ def console():
         menu()
         choose = eval(input("请选择: "))
         if choose == 1:
-            addContact()
+            addContact(data)
         elif choose == 2:
             delContact()
         elif choose == 3:
