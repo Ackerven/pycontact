@@ -19,7 +19,7 @@ file.close()
 
 
 def init(data):
-    if config['mode'] == 'csv':
+    if config['mode']['data'] == 'csv':
         if os.path.isfile(config['File']['csv']):
             print("loading...")
             csv.loading(data)
@@ -32,7 +32,7 @@ def init(data):
 
 
 def save(data):
-    if config['mode'] == 'csv':
+    if config['mode']['data'] == 'csv':
         csv.save(data)
 
 
@@ -42,7 +42,7 @@ def isPhone(phone):
 
 
 def importData(data, filePath, overlay=False):
-    if config['mode'] == 'csv':
+    if config['mode']['data'] == 'csv':
         if overlay:
             data.clear()
             csv.loading(data, filePath)
@@ -51,5 +51,5 @@ def importData(data, filePath, overlay=False):
 
 
 def export(data, filePath):
-    if config['mode'] == 'csv':
+    if config['mode']['data'] == 'csv':
         csv.save(data, filePath)
