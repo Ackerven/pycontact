@@ -61,10 +61,11 @@ def class_to_dict(data):
     return dict_list[:]
 
 
-def queryID(data, id):
+def queryID(data, cid):
     for i in data:
-        if i.id == id:
+        if i.id == cid:
             return i
+    return None
 
 
 def search(data, key, field=None, fuzzy=False):
@@ -99,3 +100,16 @@ def search(data, key, field=None, fuzzy=False):
                 if i.name == key or i.gender == key or i.phone == key or i.wx_code == key:
                     result.append(i)
     return result
+
+
+def delete(data, cid):
+    pos = -1
+    for i in range(len(data)):
+        if data[i].id == cid:
+            pos = i
+            break
+    if pos != -1:
+        del data[pos]
+        return True
+    else:
+        return False

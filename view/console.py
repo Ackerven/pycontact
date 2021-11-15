@@ -41,8 +41,16 @@ def addContact(data):
     print("Add model " + name)
 
 
-def delContact():
-    print("del")
+def delContact(data):
+    cid = eval(input("请输入需要删除的联系人的id: "))
+    tmp = controller.queryID(data, cid)
+    if tmp is None:
+        print("联系人不存在!")
+    else:
+        if controller.delete(data, cid):
+            print("删除" + tmp.name)
+        else:
+            print("删除失败!")
 
 
 def modifyContact():
@@ -96,7 +104,7 @@ def console():
         if choose == 1:
             addContact(data)
         elif choose == 2:
-            delContact()
+            delContact(data)
         elif choose == 3:
             modifyContact()
         elif choose == 4:
