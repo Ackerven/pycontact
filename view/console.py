@@ -39,7 +39,7 @@ def addContact(data):
             break
     wx_code = input("请输入微信号: ")
     data.append(Contact(name, gender, phone, wx_code))
-    print("Add model " + name)
+    print("Add contact " + name)
 
 
 def delContact(data):
