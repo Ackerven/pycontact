@@ -20,6 +20,7 @@ def menu():
     print("6. 导出联系人")
     print("0. 退出")
 
+
 # TODO filePath
 
 def addContact(data):
@@ -46,8 +47,29 @@ def modifyContact():
     print("modify")
 
 
-def searchContact():
-    print("search")
+def searchContact(data):
+    key = input("请输入查找的关键字: ")
+    isField = input("是否指定字段(y/n): ")
+    field = ''
+    if isField == 'y':
+        field = input("请输入需要查找的字段: ")
+    isFuzzy = input("是否开启模糊搜索(y/n): ")
+    result = []
+    if isFuzzy == 'y' and isField == 'y':
+        result = tool.search(data, key, field=field, fuzzy=True)
+    elif isFuzzy == 'n' and isField == 'y':
+        result = tool.search(data, key, field=field)
+    elif isFuzzy == 'y' and isField == 'n':
+        result = tool.search(data, key, fuzzy=True)
+    else:
+        result = tool.search(data, key)
+
+    if result:
+        print("共找到{}条数据: ".format(len(result)))
+        for i in result:
+            print(i)
+    else:
+        print("共找到0条数据.")
 
 
 def exportContact():
@@ -62,9 +84,11 @@ def showData(data):
     for i in data:
         print(i)
 
+
 def console():
     data = []
     tool.init(data)
+    showData(data)
     while True:
         menu()
         choose = eval(input("请选择: "))
@@ -75,7 +99,7 @@ def console():
         elif choose == 3:
             modifyContact()
         elif choose == 4:
-            searchContact()
+            searchContact(data)
         elif choose == 5:
             importContact()
         elif choose == 6:
