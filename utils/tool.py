@@ -24,7 +24,9 @@ def init(data):
             print("Successfully loading project!")
         else:
             print("Initializing...")
-            csv.init()
+            if not os.path.exists('source'):
+                print("mkdir source")
+                os.mkdir('source')
             print("Successfully initialized project!")
     print("Enjoy yourself! ")
 
