@@ -18,6 +18,7 @@ def menu():
     print("4. 查找联系人")
     print("5. 导入联系人")
     print("6. 导出联系人")
+    print("7. 列出所有联系人")
     print("0. 退出")
 
 
@@ -88,7 +89,6 @@ def showData(data):
 def console():
     data = []
     tool.init(data)
-    showData(data)
     while True:
         menu()
         choose = eval(input("请选择: "))
@@ -104,6 +104,8 @@ def console():
             importContact()
         elif choose == 6:
             exportContact()
+        elif choose == 7:
+            showData(data)
         elif choose == 0:
             break
         else:
