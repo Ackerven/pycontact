@@ -13,6 +13,8 @@ import yaml
 
 import utils.csv as csv
 
+from model.contact import Contact
+
 file = open('config.yaml', 'r', encoding='utf-8')
 config = yaml.load(file, Loader=yaml.FullLoader)
 file.close()
@@ -101,6 +103,7 @@ def search(data, key, field=None, fuzzy=False):
                     result.append(i)
     return result
 
+
 def queryPos(data, cid):
     for i in range(len(data)):
         if data[i].id == cid:
@@ -112,6 +115,15 @@ def delete(data, cid):
     pos = queryPos(data, cid)
     if pos != -1:
         del data[pos]
+        return True
+    else:
+        return False
+
+
+def modify(data, cid, name, gender, phone, wx_code):
+    pos = queryPos(data, cid)
+    if pos != -1:
+        data[pos] = Contact(name, gender, phone, wx_code, cid=cid)
         return True
     else:
         return False

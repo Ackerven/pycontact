@@ -53,8 +53,45 @@ def delContact(data):
             print("删除失败!")
 
 
-def modifyContact():
-    print("modify")
+def mod_field(field):
+    mod = input("是否修改" + field + "(y/n): ")
+    if mod == 'y':
+        tmp = input("请输入新的" + field + ": ")
+        return tmp
+    else:
+        return None
+
+
+# func again
+def modifyContact(data):
+    cid = eval(input("请输入需要修改的联系人的id: "))
+    tmp = controller.queryID(data, cid)
+    if tmp is None:
+        print("联系人不存在!")
+    else:
+        # 姓名 性别 电话 微信号
+        name = mod_field('姓名')
+        if name is None: name = tmp.name
+        gender = mod_field('性别')
+        if gender is None: gender = tmp.gender
+        mod = input("是否修改手机号(y/n): ")
+        phone = tmp.phone
+        if mod == 'y':
+            while True:
+                temp = input("请输入新手机号码: ")
+                if temp == '0':
+                    break
+                elif not tool.isPhone(temp):
+                    print("格式错误，取消修改请输入0!")
+                else:
+                    phone = temp
+                    break
+        wx_code = mod_field('微信号')
+        if wx_code is None: wx_code = tmp.wx_code
+        if controller.modify(data, cid, name, gender, phone, wx_code):
+            print('修改成功')
+        else:
+            print('修改失败')
 
 
 def searchContact(data):
@@ -106,7 +143,7 @@ def console():
         elif choose == 2:
             delContact(data)
         elif choose == 3:
-            modifyContact()
+            modifyContact(data)
         elif choose == 4:
             searchContact(data)
         elif choose == 5:
