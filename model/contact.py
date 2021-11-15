@@ -9,9 +9,12 @@
 class Contact:
     count = 0
 
-    def __init__(self, name, gender, phone, wx_code):
-        Contact.count += 1
-        self.id = Contact.count
+    def __init__(self, name, gender, phone, wx_code, cid=None):
+        if cid is None:
+            Contact.count += 1
+            self.id = Contact.count
+        else:
+            self.id = cid
         self.name = name
         self.gender = gender
         self.phone = phone

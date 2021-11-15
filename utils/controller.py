@@ -101,13 +101,15 @@ def search(data, key, field=None, fuzzy=False):
                     result.append(i)
     return result
 
-
-def delete(data, cid):
-    pos = -1
+def queryPos(data, cid):
     for i in range(len(data)):
         if data[i].id == cid:
-            pos = i
-            break
+            return i
+    return -1
+
+
+def delete(data, cid):
+    pos = queryPos(data, cid)
     if pos != -1:
         del data[pos]
         return True
