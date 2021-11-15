@@ -15,10 +15,11 @@ file = open('config.yaml', 'r', encoding='utf-8')
 config = yaml.load(file, Loader=yaml.FullLoader)
 file.close()
 
+defaultPath = config['File'][config['env']]['csv']
 
 def init(data):
     if config['mode']['data'] == 'csv':
-        if os.path.isfile(config['File']['csv']):
+        if os.path.isfile(defaultPath):
             print("loading...")
             csv.loading(data)
             print("Successfully loading project!")

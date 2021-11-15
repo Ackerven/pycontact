@@ -2,7 +2,7 @@
 # @Mail: ackerven@cxmail.org
 # @Time: 14/11/2021 18:48
 # @File: csv.py
-# OS: 
+# OS: Ubuntu 20.04 LTS
 # SoftWare: PyCharm
 # @Copyright Copyright(C) 2021 Ackerven All rights reserved.
 
@@ -14,6 +14,7 @@ file = open('config.yaml', 'r', encoding='utf-8')
 config = yaml.load(file, Loader=yaml.FullLoader)
 file.close()
 
+defaultPath = config['File'][config['env']]['csv']
 
 def init():
     pass
@@ -21,7 +22,7 @@ def init():
 
 def loading(data, filePath=None):
     if filePath is None:
-        filePath = config['File']['csv']
+        filePath = defaultPath
     with open(filePath, 'r', encoding='utf-8') as fp:
         fp.readline()   # title
         while True:
@@ -36,7 +37,7 @@ def loading(data, filePath=None):
 
 def save(data, filePath = None):
     if filePath is None:
-        filePath = config['File']['csv']
+        filePath = defaultPath
     with open(filePath, 'w', encoding='utf-8') as fp:
         fp.write('id,name,gender,phone,wx_code\n')
         for i in data:
