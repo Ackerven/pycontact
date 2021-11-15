@@ -8,6 +8,7 @@
 
 import utils.tool as tool
 import utils.controller as controller
+from utils.controller import config
 from model.contact import Contact
 
 
@@ -119,8 +120,12 @@ def searchContact(data):
         print("共找到0条数据.")
 
 
-def exportContact():
-    print("export")
+def exportContact(data):
+    filePath = input("请输入导出文件路径(需要文件名, " + config['mode']['data'] + "): ")
+    if filePath.split('.')[1] != config['mode']['data']:
+        print("文件路径错误!")
+    controller.export(data, filePath=filePath)
+    print("导出文件" + filePath + "成功")
 
 
 def importContact():
@@ -149,7 +154,7 @@ def console():
         elif choose == 5:
             importContact()
         elif choose == 6:
-            exportContact()
+            exportContact(data)
         elif choose == 7:
             showData(data)
         elif choose == 0:
