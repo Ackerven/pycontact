@@ -128,7 +128,16 @@ def exportContact(data):
     print("导出文件" + filePath + "成功")
 
 
-def importContact():
+def importContact(data):
+    filePath = input("请输入导入文件路径(需要文件名, " + config['mode']['data'] + "): ")
+    if filePath.split('.')[1] != config['mode']['data']:
+        print("文件路径错误!")
+    overlay = input("是否覆盖原数据(y/n): ")
+    if overlay == 'y':
+        controller.importData(data, filePath, overlay=True)
+    else:
+        controller.importData(data, filePath)
+    print("导入文件" + filePath + "成功")
     print("import")
 
 
@@ -152,7 +161,7 @@ def console():
         elif choose == 4:
             searchContact(data)
         elif choose == 5:
-            importContact()
+            importContact(data)
         elif choose == 6:
             exportContact(data)
         elif choose == 7:
