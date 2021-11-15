@@ -7,7 +7,7 @@
 # @Copyright Copyright(C) 2021 Ackerven All rights reserved.
 
 from faker import Faker
-from contact.contact import Contact
+from model.contact import Contact
 import random
 
 fake = Faker(locale='zh_CN')

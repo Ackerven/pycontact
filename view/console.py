@@ -7,7 +7,8 @@
 # @Copyright Copyright(C) 2021 Ackerven All rights reserved.
 
 import utils.tool as tool
-from contact.contact import Contact
+import utils.controller as controller
+from model.contact import Contact
 
 
 def menu():
@@ -37,7 +38,7 @@ def addContact(data):
             break
     wx_code = input("请输入微信号: ")
     data.append(Contact(name, gender, phone, wx_code))
-    print("Add contact " + name)
+    print("Add model " + name)
 
 
 def delContact():
@@ -57,13 +58,13 @@ def searchContact(data):
     isFuzzy = input("是否开启模糊搜索(y/n): ")
     result = []
     if isFuzzy == 'y' and isField == 'y':
-        result = tool.search(data, key, field=field, fuzzy=True)
+        result = controller.search(data, key, field=field, fuzzy=True)
     elif isFuzzy == 'n' and isField == 'y':
-        result = tool.search(data, key, field=field)
+        result = controller.search(data, key, field=field)
     elif isFuzzy == 'y' and isField == 'n':
-        result = tool.search(data, key, fuzzy=True)
+        result = controller.search(data, key, fuzzy=True)
     else:
-        result = tool.search(data, key)
+        result = controller.search(data, key)
 
     if result:
         print("共找到{}条数据: ".format(len(result)))
@@ -88,7 +89,7 @@ def showData(data):
 
 def console():
     data = []
-    tool.init(data)
+    controller.init(data)
     while True:
         menu()
         choose = eval(input("请选择: "))
@@ -110,4 +111,4 @@ def console():
             break
         else:
             print("输入错误！")
-    tool.save(data)
+    controller.save(data)

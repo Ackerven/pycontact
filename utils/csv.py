@@ -8,7 +8,7 @@
 
 import yaml
 
-from contact.contact import Contact
+from model.contact import Contact
 
 file = open('config.yaml', 'r', encoding='utf-8')
 config = yaml.load(file, Loader=yaml.FullLoader)
