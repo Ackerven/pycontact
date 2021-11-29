@@ -19,12 +19,12 @@ file = open('config.yaml', 'r', encoding='utf-8')
 config = yaml.load(file, Loader=yaml.FullLoader)
 file.close()
 
-defaultPath = config['File'][config['env']]['csv']
+defaultCsvPath = config['File'][config['env']]['csv']
 
 
 def init(data):
     if config['mode']['data'] == 'csv':
-        if os.path.isfile(defaultPath):
+        if os.path.isfile(defaultCsvPath):
             print("loading...")
             csv.loading(data)
             print("Successfully loading project!")
@@ -34,12 +34,16 @@ def init(data):
                 print("mkdir source")
                 os.mkdir('source')
             print("Successfully initialized project!")
+    elif config['mode']['data'] == 'excel':
+        pass
     print("Enjoy yourself! ")
 
 
 def save(data):
     if config['mode']['data'] == 'csv':
         csv.save(data)
+    elif config['mode']['data'] == 'excel':
+        pass
 
 
 def importData(data, filePath, overlay=False):
@@ -49,12 +53,17 @@ def importData(data, filePath, overlay=False):
             csv.loading(data, filePath)
         else:
             csv.loading(data, filePath)
+    elif config['mode']['data'] == 'excel':
+        pass
 
 
 def export(data, filePath):
     if config['mode']['data'] == 'csv':
         csv.save(data, filePath)
+    elif config['mode']['data'] == 'excel':
+        pass
 
+# NO FILE IO
 
 def class_to_dict(data):
     dict_list = []
