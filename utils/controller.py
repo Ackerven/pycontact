@@ -12,31 +12,51 @@ import os
 import yaml
 
 import utils.csv as csv
-
+import utils.excel as excel
 from model.contact import Contact
 
-file = open('../config.yaml', 'r', encoding='utf-8')
+file = open('config.yaml', 'r', encoding='utf-8')
 config = yaml.load(file, Loader=yaml.FullLoader)
 file.close()
 
 defaultCsvPath = config['File'][config['env']]['csv']
 
 
-def init(data):
-    if config['mode']['data'] == 'csv':
-        if os.path.isfile(defaultCsvPath):
-            print("loading...")
+def init():
+    if os.path.isfile(defaultCsvPath):
+        data = []
+        print("loading...")
+        if config['mode']['data'] == 'csv':
             csv.loading(data)
-            print("Successfully loading project!")
-        else:
-            print("Initializing...")
-            if not os.path.exists('source'):
-                print("mkdir source")
-                os.mkdir('source')
-            print("Successfully initialized project!")
-    elif config['mode']['data'] == 'excel':
-        pass
-    print("Enjoy yourself! ")
+        elif config['mode']['data'] == 'excel':
+            data = excel.loading()
+        print("Successfully loading project!")
+        print("Enjoy yourself! ")
+        return data
+    else:
+        print("Initializing...")
+        if not os.path.exists('source'):
+            print("mkdir source")
+            os.mkdir('source')
+        print("Successfully initialized project!")
+        print("Enjoy yourself! ")
+
+
+# def init(data):
+#     if config['mode']['data'] == 'csv':
+#         if os.path.isfile(defaultCsvPath):
+#             print("loading...")
+#             csv.loading(data)
+#             print("Successfully loading project!")
+#         else:
+#             print("Initializing...")
+#             if not os.path.exists('source'):
+#                 print("mkdir source")
+#                 os.mkdir('source')
+#             print("Successfully initialized project!")
+#     elif config['mode']['data'] == 'excel':
+#         pass
+#     print("Enjoy yourself! ")
 
 
 def save(data):

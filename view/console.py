@@ -189,8 +189,7 @@ def showData(data):
 
 
 def console():
-    data = []
-    controller.init(data)
+    data = controller.init()
     while True:
         menu()
         choose = eval(input("请选择: "))
