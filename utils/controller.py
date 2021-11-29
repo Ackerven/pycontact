@@ -19,11 +19,11 @@ file = open('config.yaml', 'r', encoding='utf-8')
 config = yaml.load(file, Loader=yaml.FullLoader)
 file.close()
 
-defaultCsvPath = config['File'][config['env']]['csv']
+defaultPath = config['File'][config['env']][config['mode']['data']]
 
 
 def init():
-    if os.path.isfile(defaultCsvPath):
+    if os.path.isfile(defaultPath):
         data = []
         print("loading...")
         if config['mode']['data'] == 'csv':
@@ -42,46 +42,28 @@ def init():
         print("Enjoy yourself! ")
 
 
-# def init(data):
-#     if config['mode']['data'] == 'csv':
-#         if os.path.isfile(defaultCsvPath):
-#             print("loading...")
-#             csv.loading(data)
-#             print("Successfully loading project!")
-#         else:
-#             print("Initializing...")
-#             if not os.path.exists('source'):
-#                 print("mkdir source")
-#                 os.mkdir('source')
-#             print("Successfully initialized project!")
-#     elif config['mode']['data'] == 'excel':
-#         pass
-#     print("Enjoy yourself! ")
-
-
 def save(data):
     if config['mode']['data'] == 'csv':
         csv.save(data)
     elif config['mode']['data'] == 'excel':
-        pass
+        excel.save(data)
 
 
 def importData(data, filePath, overlay=False):
+    if overlay:
+        data.clear()
     if config['mode']['data'] == 'csv':
-        if overlay:
-            data.clear()
-            csv.loading(data, filePath)
-        else:
-            csv.loading(data, filePath)
+        csv.loading(data, filePath)
     elif config['mode']['data'] == 'excel':
-        pass
+        for i in excel.loading(filePath):
+            data.append(i)
 
 
 def export(data, filePath):
     if config['mode']['data'] == 'csv':
         csv.save(data, filePath)
     elif config['mode']['data'] == 'excel':
-        pass
+        csv.save(data, filePath)
 
 # NO FILE IO
 
