@@ -28,7 +28,20 @@ def menu():
 
 def addContact(data):
     name = input("请输入姓名: ")
-    gender = input("请输入性别: ")
+    while True:
+        print("1. Male\n2. Female")
+        choose = eval(input("请选择性别: "))
+        if choose == 0:
+            return
+        elif choose == 1:
+            gender = 'Male'
+            break
+        elif choose == 2:
+            gender = 'Female'
+            break
+        else:
+            print("输入错误, 取消添加请输入0!")
+
     while True:
         phone = input("请输入手机号码: ")
         if phone == '0':
@@ -73,8 +86,20 @@ def modifyContact(data):
         # 姓名 性别 电话 微信号
         name = mod_field('姓名')
         if name is None: name = tmp.name
-        gender = mod_field('性别')
-        if gender is None: gender = tmp.gender
+        mod = input("是否修改性别(y/n): ")
+        gender = tmp.gender
+        if mod == 'y':
+            while True:
+                print("1. Male\n2. Female")
+                choose = eval(input("请选择新的性别(取消修改请输入0): "))
+                if choose == 1:
+                    gender = 'Male'
+                    break
+                elif choose == 2:
+                    gender = 'Female'
+                    break
+                elif choose == 0:
+                    break
         mod = input("是否修改手机号(y/n): ")
         phone = tmp.phone
         if mod == 'y':
