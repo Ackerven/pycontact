@@ -15,7 +15,7 @@ import utils.csv as csv
 
 from model.contact import Contact
 
-file = open('config.yaml', 'r', encoding='utf-8')
+file = open('../config.yaml', 'r', encoding='utf-8')
 config = yaml.load(file, Loader=yaml.FullLoader)
 file.close()
 
