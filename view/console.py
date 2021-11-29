@@ -146,24 +146,41 @@ def searchContact(data):
 
 
 def exportContact(data):
-    filePath = input("请输入导出文件路径(需要文件名, " + config['mode']['data'] + "): ")
-    if filePath.split('.')[1] != config['mode']['data']:
+    try:
+        while True:
+            filePath = input("请输入导出文件路径(需要文件名, " + config['mode']['data'] + "): ")
+            if filePath == '0':
+                return
+            elif filePath.split('.')[1] != config['mode']['data']:
+                print("文件类型错误！取消请输入0.")
+            else:
+                break
+    except:
         print("文件路径错误!")
+        return
     controller.export(data, filePath=filePath)
     print("导出文件" + filePath + "成功")
 
 
 def importContact(data):
-    filePath = input("请输入导入文件路径(需要文件名, " + config['mode']['data'] + "): ")
-    if filePath.split('.')[1] != config['mode']['data']:
+    try:
+        while True:
+            filePath = input("请输入导入文件路径(需要文件名, " + config['mode']['data'] + "): ")
+            if filePath == '0':
+                return
+            elif filePath.split('.')[1] != config['mode']['data']:
+                print("文件类型错误！取消请输入0")
+            else:
+                break
+    except:
         print("文件路径错误!")
+        return
     overlay = input("是否覆盖原数据(y/n): ")
     if overlay == 'y':
         controller.importData(data, filePath, overlay=True)
     else:
         controller.importData(data, filePath)
     print("导入文件" + filePath + "成功")
-    print("import")
 
 
 def showData(data):
