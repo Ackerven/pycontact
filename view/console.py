@@ -10,6 +10,7 @@ import utils.tool as tool
 import utils.controller as controller
 from utils.controller import config
 from model.contact import Contact
+import os
 
 
 def menu():
@@ -176,12 +177,14 @@ def importContact(data):
         print("文件路径错误!")
         return
     overlay = input("是否覆盖原数据(y/n): ")
-    if overlay == 'y':
-        controller.importData(data, filePath, overlay=True)
-    else:
-        controller.importData(data, filePath)
-    print("导入文件" + filePath + "成功")
-
+    try:
+        if overlay == 'y':
+            controller.importData(data, filePath, overlay=True)
+        else:
+            controller.importData(data, filePath)
+        print("导入文件" + filePath + "成功")
+    except:
+        print("导入文件" + filePath + "失败")
 
 def showData(data):
     for i in data:
@@ -189,8 +192,7 @@ def showData(data):
 
 
 def console():
-    data = []
-    controller.init(data)
+    data = controller.init()
     while True:
         menu()
         choose = eval(input("请选择: "))

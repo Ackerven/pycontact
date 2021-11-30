@@ -5,7 +5,7 @@
 # 程序启动时加载数据类型
 mode:
   view: Console
-  data: csv
+  data: xlsx
 
 # 程序运行环境 Debug or Release
 env: Release
@@ -18,8 +18,8 @@ DataBase:
 File:
   Debug:
     csv: ../source/default.csv
-    excel: ../source/default.xlsx
+    xlsx: ../source/default.xlsx
   Release:
     csv: source/default.csv
-    excel: source/default.xlsx
+    xlsx: source/default.xlsx
 

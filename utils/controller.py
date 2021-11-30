@@ -12,49 +12,60 @@ import os
 import yaml
 
 import utils.csv as csv
-
+import utils.excel as excel
 from model.contact import Contact
 
 file = open('config.yaml', 'r', encoding='utf-8')
 config = yaml.load(file, Loader=yaml.FullLoader)
 file.close()
 
-defaultPath = config['File'][config['env']]['csv']
+defaultPath = config['File'][config['env']][config['mode']['data']]
 
 
-def init(data):
-    if config['mode']['data'] == 'csv':
-        if os.path.isfile(defaultPath):
-            print("loading...")
+def init():
+    if os.path.isfile(defaultPath):
+        data = []
+        print("loading...")
+        if config['mode']['data'] == 'csv':
             csv.loading(data)
-            print("Successfully loading project!")
-        else:
-            print("Initializing...")
-            if not os.path.exists('source'):
-                print("mkdir source")
-                os.mkdir('source')
-            print("Successfully initialized project!")
-    print("Enjoy yourself! ")
+        elif config['mode']['data'] == 'xlsx':
+            data = excel.loading()
+        print("Successfully loading project!")
+        print("Enjoy yourself! ")
+        return data
+    else:
+        print("Initializing...")
+        if not os.path.exists('source'):
+            print("mkdir source")
+            os.mkdir('source')
+        print("Successfully initialized project!")
+        print("Enjoy yourself! ")
 
 
 def save(data):
     if config['mode']['data'] == 'csv':
         csv.save(data)
+    elif config['mode']['data'] == 'xlsx':
+        excel.save(data)
 
 
 def importData(data, filePath, overlay=False):
+    if overlay:
+        data.clear()
     if config['mode']['data'] == 'csv':
-        if overlay:
-            data.clear()
-            csv.loading(data, filePath)
-        else:
-            csv.loading(data, filePath)
+        csv.loading(data, filePath)
+    elif config['mode']['data'] == 'xlsx':
+        for i in excel.loading(filePath):
+            data.append(i)
 
 
 def export(data, filePath):
     if config['mode']['data'] == 'csv':
         csv.save(data, filePath)
+    elif config['mode']['data'] == 'xlsx':
+        excel.save(data, filePath)
 
+# NO FILE IO
 
 def class_to_dict(data):
     dict_list = []
