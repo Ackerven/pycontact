@@ -23,12 +23,12 @@ def init():
 def loading(filePath=None) -> list:
     if filePath is None:
         filePath = defaultPath
-    print("Successfully loaded data from " + filePath)
     df = pd.read_excel(filePath)
     try:
         df.drop(columns='Unnamed: 0', axis=1, inplace=True)
     except:
         pass
+    print("Successfully loaded data from " + filePath)
     return tool.dfToObject(df)
 
 
