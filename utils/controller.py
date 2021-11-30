@@ -28,7 +28,7 @@ def init():
         print("loading...")
         if config['mode']['data'] == 'csv':
             csv.loading(data)
-        elif config['mode']['data'] == 'excel':
+        elif config['mode']['data'] == 'xlsx':
             data = excel.loading()
         print("Successfully loading project!")
         print("Enjoy yourself! ")
@@ -45,7 +45,7 @@ def init():
 def save(data):
     if config['mode']['data'] == 'csv':
         csv.save(data)
-    elif config['mode']['data'] == 'excel':
+    elif config['mode']['data'] == 'xlsx':
         excel.save(data)
 
 
@@ -54,7 +54,7 @@ def importData(data, filePath, overlay=False):
         data.clear()
     if config['mode']['data'] == 'csv':
         csv.loading(data, filePath)
-    elif config['mode']['data'] == 'excel':
+    elif config['mode']['data'] == 'xlsx':
         for i in excel.loading(filePath):
             data.append(i)
 
@@ -62,8 +62,8 @@ def importData(data, filePath, overlay=False):
 def export(data, filePath):
     if config['mode']['data'] == 'csv':
         csv.save(data, filePath)
-    elif config['mode']['data'] == 'excel':
-        csv.save(data, filePath)
+    elif config['mode']['data'] == 'xlsx':
+        excel.save(data, filePath)
 
 # NO FILE IO
 

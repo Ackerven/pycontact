@@ -13,7 +13,7 @@ file = open('config.yaml', 'r', encoding='utf-8')
 config = yaml.load(file, Loader=yaml.FullLoader)
 file.close()
 
-defaultPath = config['File'][config['env']]['excel']
+defaultPath = config['File'][config['env']]['xlsx']
 
 
 def init():
