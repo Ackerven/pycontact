@@ -12,9 +12,10 @@ env: Release
 
 # 数据库连接信息
 DataBase:
-  url: localhost
-  username: root
-  password: 123456
+  host: 110.42.156.179
+  username: py
+  password: py
+  db: py
 
 # 默认文件路径
 File:
