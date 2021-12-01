@@ -152,17 +152,19 @@ def searchContact(data):
 def exportContact(data):
     try:
         while True:
-            filePath = input("请输入导出文件路径(需要文件名, " + config['mode']['data'] + "): ")
+            filePath = input("请输入导出文件路径(支持csv, xlsx): ")
             if filePath == '0':
                 return
-            elif filePath.split('.')[1] != config['mode']['data']:
-                print("文件类型错误! 取消请输入0.")
             else:
-                break
+                fileType = filePath.split('.')[1]
+                if fileType != 'csv' and fileType != 'xlsx':
+                    print("文件类型错误! 取消请输入0.")
+                else:
+                    break
     except:
         print("文件路径错误!")
         return
-    controller.export(data, filePath=filePath)
+    controller.export(data, filePath, fileType)
     print("导出文件" + filePath + "成功!")
 
 
@@ -170,22 +172,24 @@ def exportContact(data):
 def importContact(data):
     try:
         while True:
-            filePath = input("请输入导入文件路径(需要文件名, " + config['mode']['data'] + "): ")
+            filePath = input("请输入导入文件路径(支持csv, xlsx)")
             if filePath == '0':
                 return
-            elif filePath.split('.')[1] != config['mode']['data']:
-                print("文件类型错误! 取消请输入0.")
             else:
-                break
+                fileType = filePath.split('.')[1]
+                if fileType != 'csv' and fileType != 'xlsx':
+                    print("文件类型错误! 取消请输入0.")
+                else:
+                    break
     except:
         print("文件路径错误!")
         return
     overlay = input("是否覆盖原数据(y/n): ")
     try:
         if overlay == 'y':
-            controller.importData(data, filePath, overlay=True)
+            controller.importData(data, filePath, fileType, overlay=True)
         else:
-            controller.importData(data, filePath)
+            controller.importData(data, filePath, fileType)
         print("导入文件" + filePath + "成功!")
     except:
         print("导入文件" + filePath + "失败!")
