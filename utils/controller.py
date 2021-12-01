@@ -52,21 +52,21 @@ def save(data):
 
 
 # 从文件中导入数据
-def importData(data, filePath, overlay=False):
+def importData(data, filePath, fileType, overlay=False):
     if overlay:
         data.clear()
-    if config['mode']['data'] == 'csv':
+    if fileType == 'csv':
         csv.loading(data, filePath)
-    elif config['mode']['data'] == 'xlsx':
+    elif fileType == 'xlsx':
         for i in excel.loading(filePath):
             data.append(i)
 
 
 # 导出数据到文件
-def export(data, filePath):
-    if config['mode']['data'] == 'csv':
+def export(data, filePath, fileType):
+    if fileType == 'csv':
         csv.save(data, filePath)
-    elif config['mode']['data'] == 'xlsx':
+    elif fileType == 'xlsx':
         excel.save(data, filePath)
 
 

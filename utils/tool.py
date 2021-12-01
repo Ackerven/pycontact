@@ -44,5 +44,5 @@ def dfToObject(df):
     data = []
     for i in range(len(df)):
         # print(df.loc[i])
-        data.append(Contact(df.loc[i][1], df.loc[i][2], df.loc[i][3], df.loc[i][4]))
+        data.append(Contact(df.loc[i][1], df.loc[i][2], str(df.loc[i][3]), df.loc[i][4]))
     return data
