@@ -6,9 +6,11 @@
 # SoftWare: PyCharm
 # @Copyright Copyright(C) 2021 Ackerven All rights reserved.
 
-import yaml
 import pandas as pd
+import yaml
+
 from utils import tool
+
 file = open('config.yaml', 'r', encoding='utf-8')
 config = yaml.load(file, Loader=yaml.FullLoader)
 file.close()
@@ -16,10 +18,7 @@ file.close()
 defaultPath = config['File'][config['env']]['xlsx']
 
 
-def init():
-    pass
-
-
+# 从xlsx文件中加载数据，并把数据以对象列表的形式返回
 def loading(filePath=None) -> list:
     if filePath is None:
         filePath = defaultPath
@@ -32,9 +31,10 @@ def loading(filePath=None) -> list:
     return tool.dfToObject(df)
 
 
+# 把对象列表的数据保存到xlsx文件中
 def save(data, filePath=None):
     if filePath is None:
         filePath = defaultPath
-    df = tool.objectToDict(data)
+    df = tool.objectToDF(data)
     df.to_excel(filePath)
     print("Successfully saved to " + filePath)

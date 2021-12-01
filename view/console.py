@@ -6,13 +6,13 @@
 # SoftWare: PyCharm
 # @Copyright Copyright(C) 2021 Ackerven All rights reserved.
 
-import utils.tool as tool
 import utils.controller as controller
-from utils.controller import config
+import utils.tool as tool
 from model.contact import Contact
-import os
+from utils.controller import config
 
 
+# 菜单
 def menu():
     print("---" * 10 + 'Contact by Ackerven' + '---' * 10)
     print("1. 添加联系人")
@@ -25,8 +25,7 @@ def menu():
     print("0. 退出")
 
 
-# TODO filePath
-
+# 添加联系人
 def addContact(data):
     name = input("请输入姓名: ")
     while True:
@@ -53,9 +52,10 @@ def addContact(data):
             break
     wx_code = input("请输入微信号: ")
     data.append(Contact(name, gender, phone, wx_code))
-    print("Add contact " + name)
+    print("成功添加联系人" + name)
 
 
+# 删除联系人
 def delContact(data):
     cid = eval(input("请输入需要删除的联系人的id: "))
     tmp = controller.queryID(data, cid)
@@ -63,11 +63,12 @@ def delContact(data):
         print("联系人不存在!")
     else:
         if controller.delete(data, cid):
-            print("删除" + tmp.name)
+            print("删除" + tmp.name + '成功!')
         else:
             print("删除失败!")
 
 
+# 修改字段
 def mod_field(field):
     mod = input("是否修改" + field + "(y/n): ")
     if mod == 'y':
@@ -77,7 +78,7 @@ def mod_field(field):
         return None
 
 
-# func again
+# 修改联系人
 def modifyContact(data):
     cid = eval(input("请输入需要修改的联系人的id: "))
     tmp = controller.queryID(data, cid)
@@ -121,6 +122,7 @@ def modifyContact(data):
             print('修改失败')
 
 
+# 查找联系人
 def searchContact(data):
     key = input("请输入查找的关键字: ")
     isField = input("是否指定字段(y/n): ")
@@ -146,6 +148,7 @@ def searchContact(data):
         print("共找到0条数据.")
 
 
+# 到处联系人
 def exportContact(data):
     try:
         while True:
@@ -153,16 +156,17 @@ def exportContact(data):
             if filePath == '0':
                 return
             elif filePath.split('.')[1] != config['mode']['data']:
-                print("文件类型错误！取消请输入0.")
+                print("文件类型错误! 取消请输入0.")
             else:
                 break
     except:
         print("文件路径错误!")
         return
     controller.export(data, filePath=filePath)
-    print("导出文件" + filePath + "成功")
+    print("导出文件" + filePath + "成功!")
 
 
+# 导入联系人
 def importContact(data):
     try:
         while True:
@@ -170,7 +174,7 @@ def importContact(data):
             if filePath == '0':
                 return
             elif filePath.split('.')[1] != config['mode']['data']:
-                print("文件类型错误！取消请输入0")
+                print("文件类型错误! 取消请输入0.")
             else:
                 break
     except:
@@ -182,10 +186,12 @@ def importContact(data):
             controller.importData(data, filePath, overlay=True)
         else:
             controller.importData(data, filePath)
-        print("导入文件" + filePath + "成功")
+        print("导入文件" + filePath + "成功!")
     except:
-        print("导入文件" + filePath + "失败")
+        print("导入文件" + filePath + "失败!")
 
+
+# 显示所有联系人
 def showData(data):
     for i in data:
         print(i)

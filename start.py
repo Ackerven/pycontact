@@ -9,6 +9,9 @@
 import yaml
 from view.console import console
 
+# 启动程序，根据配置文件选择启动界面
+# Console 控制台 console()
+# GUI 图形界面 gui()
 if __name__ == '__main__':
     config = yaml.load(open('config.yaml', 'r', encoding='utf-8'), Loader=yaml.FullLoader)
     if config['mode']['view'] == 'Console':

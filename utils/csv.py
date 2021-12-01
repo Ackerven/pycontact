@@ -16,15 +16,13 @@ file.close()
 
 defaultPath = config['File'][config['env']]['csv']
 
-def init():
-    pass
 
-
+# 加载csv文件，处理数据，把数据加入到对象列表中
 def loading(data, filePath=None):
     if filePath is None:
         filePath = defaultPath
     with open(filePath, 'r', encoding='utf-8') as fp:
-        fp.readline()   # title
+        fp.readline()  # title
         while True:
             line = fp.readline().strip()
             if line:
@@ -35,7 +33,8 @@ def loading(data, filePath=None):
     print("Successfully loaded data from " + filePath)
 
 
-def save(data, filePath = None):
+# 把对象列表的数据保存到csv文件中
+def save(data, filePath=None):
     if filePath is None:
         filePath = defaultPath
     with open(filePath, 'w', encoding='utf-8') as fp:
