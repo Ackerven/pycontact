@@ -6,8 +6,8 @@
 # SoftWare: PyCharm
 # @Copyright Copyright(C) 2021 Ackerven All rights reserved.
 
-import re
 import os
+import re
 
 import yaml
 
@@ -22,6 +22,7 @@ file.close()
 defaultPath = config['File'][config['env']][config['mode']['data']]
 
 
+# 程序启动初始化函数
 def init():
     if os.path.isfile(defaultPath):
         data = []
@@ -42,6 +43,7 @@ def init():
         print("Enjoy yourself! ")
 
 
+# 把用户列表数据写入文件
 def save(data):
     if config['mode']['data'] == 'csv':
         csv.save(data)
@@ -49,6 +51,7 @@ def save(data):
         excel.save(data)
 
 
+# 从文件中导入数据
 def importData(data, filePath, overlay=False):
     if overlay:
         data.clear()
@@ -59,21 +62,24 @@ def importData(data, filePath, overlay=False):
             data.append(i)
 
 
+# 导出数据到文件
 def export(data, filePath):
     if config['mode']['data'] == 'csv':
         csv.save(data, filePath)
     elif config['mode']['data'] == 'xlsx':
         excel.save(data, filePath)
 
-# NO FILE IO
 
-def class_to_dict(data):
+# NO FILE IO
+# 把对象列表转为对象字典列表
+def object_to_dict(data):
     dict_list = []
     for i in data:
         dict_list.append({'id': i.id, 'name': i.name, 'gender': i.gender, 'phone': i.phone, 'wx_code': i.wx_code})
     return dict_list[:]
 
 
+# 通过id查询用户是否存在
 def queryID(data, cid):
     for i in data:
         if i.id == cid:
@@ -81,6 +87,7 @@ def queryID(data, cid):
     return None
 
 
+# 根据给定字段查找联系人
 def search(data, key, field=None, fuzzy=False):
     result = []
     if fuzzy:  # True
@@ -89,7 +96,7 @@ def search(data, key, field=None, fuzzy=False):
         pattern = '.*{}.*'.format(key)
         regex = re.compile(pattern)
         if field:  # No None
-            data_dict = class_to_dict(data)
+            data_dict = object_to_dict(data)
             for i in data_dict:
                 match = regex.search(i[field])
                 if match:
@@ -104,7 +111,7 @@ def search(data, key, field=None, fuzzy=False):
                     result.append(i)
     else:  # False
         if field:  # No None
-            data_dict = class_to_dict(data)
+            data_dict = object_to_dict(data)
             for i in data_dict:
                 if i[field] == key:
                     result.append(queryID(data, i['id']))
@@ -115,6 +122,7 @@ def search(data, key, field=None, fuzzy=False):
     return result
 
 
+# 通过cid用户在列表中的位置
 def queryPos(data, cid):
     for i in range(len(data)):
         if data[i].id == cid:
@@ -122,6 +130,7 @@ def queryPos(data, cid):
     return -1
 
 
+# 删除用户
 def delete(data, cid):
     pos = queryPos(data, cid)
     if pos != -1:
@@ -131,6 +140,7 @@ def delete(data, cid):
         return False
 
 
+# 修改用户
 def modify(data, cid, name, gender, phone, wx_code):
     pos = queryPos(data, cid)
     if pos != -1:

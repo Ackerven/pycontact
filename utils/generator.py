@@ -6,13 +6,16 @@
 # SoftWare: PyCharm
 # @Copyright Copyright(C) 2021 Ackerven All rights reserved.
 
-from faker import Faker
-from model.contact import Contact
 import random
+
+from faker import Faker
+
+from model.contact import Contact
 
 fake = Faker(locale='zh_CN')
 
 
+# 随机生成数据
 def contact_generator(number):
     contact_list = []
     for i in range(number):
@@ -21,4 +24,4 @@ def contact_generator(number):
                                     fake.phone_number(),
                                     fake.first_romanized_name())
                             )
-    return contact_list[:]
+    return contact_list

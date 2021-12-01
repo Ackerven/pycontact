@@ -6,6 +6,9 @@
 # SoftWare: PyCharm
 # @Copyright Copyright(C) 2021 Ackerven All rights reserved.
 
+# 联系人对象
+# 每个联系人有四个字段：姓名，性别，电话，微信号
+# 特殊字段：id为特殊字段，是数据库表的主键
 class Contact:
     count = 0
 
