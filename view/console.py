@@ -193,8 +193,11 @@ def importContact(data):
 
 # 显示所有联系人
 def showData(data):
-    for i in data:
-        print(i)
+    if data is None:
+        print()
+    else:
+        for i in data:
+            print(i)
 
 
 def console():
