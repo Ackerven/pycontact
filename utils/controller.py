@@ -13,34 +13,43 @@ import yaml
 
 import utils.csv as csv
 import utils.excel as excel
+import utils.mysql as db
 from model.contact import Contact
 
 file = open('config.yaml', 'r', encoding='utf-8')
 config = yaml.load(file, Loader=yaml.FullLoader)
 file.close()
 
-defaultPath = config['File'][config['env']][config['mode']['data']]
+if config['mode']['data'] != 'db':
+    defaultPath = config['File'][config['env']][config['mode']['data']]
 
 
 # 程序启动初始化函数
 def init():
-    if os.path.isfile(defaultPath):
-        data = []
-        print("loading...")
-        if config['mode']['data'] == 'csv':
-            csv.loading(data)
-        elif config['mode']['data'] == 'xlsx':
-            data = excel.loading()
+    if config['mode']['data'] == 'db':
+        data = db.queryAll()
         print("Successfully loading project!")
         print("Enjoy yourself! ")
         return data
     else:
-        print("Initializing...")
-        if not os.path.exists('source'):
-            print("mkdir source")
-            os.mkdir('source')
-        print("Successfully initialized project!")
-        print("Enjoy yourself! ")
+        if os.path.isfile(defaultPath):
+            data = []
+            print("loading...")
+            if config['mode']['data'] == 'csv':
+                csv.loading(data)
+            elif config['mode']['data'] == 'xlsx':
+                data = excel.loading()
+            print("Successfully loading project!")
+            print("Enjoy yourself! ")
+            return data
+        else:
+            print("Initializing...")
+            if not os.path.exists('source'):
+                print("mkdir source")
+                os.mkdir('source')
+            print("Successfully initialized project!")
+            print("Enjoy yourself! ")
+
 
 
 # 把用户列表数据写入文件
@@ -56,9 +65,19 @@ def importData(data, filePath, fileType, overlay=False):
     if overlay:
         data.clear()
     if fileType == 'csv':
-        csv.loading(data, filePath)
+        tmp = csv.loading(filePath)
     elif fileType == 'xlsx':
-        for i in excel.loading(filePath):
+        tmp = excel.loading(filePath)
+
+    if config['mode']['data'] == 'db':
+        tmpId = db.getId()
+        for i in tmp:
+            tmpId += 1
+            i.id = tmpId
+            data.append(i)
+        db.insert(tmp)
+    else:
+        for i in tmp:
             data.append(i)
 
 
@@ -135,6 +154,7 @@ def delete(data, cid):
     pos = queryPos(data, cid)
     if pos != -1:
         del data[pos]
+        db.delete(cid)
         return True
     else:
         return False
@@ -144,7 +164,9 @@ def delete(data, cid):
 def modify(data, cid, name, gender, phone, wx_code):
     pos = queryPos(data, cid)
     if pos != -1:
-        data[pos] = Contact(name, gender, phone, wx_code, cid=cid)
+        tmp = Contact(name, gender, phone, wx_code, cid=cid)
+        data[pos] = tmp
+        db.update(cid, tmp)
         return True
     else:
         return False

@@ -18,7 +18,8 @@ defaultPath = config['File'][config['env']]['csv']
 
 
 # 加载csv文件，处理数据，把数据加入到对象列表中
-def loading(data, filePath=None):
+def loading(filePath=None) -> list:
+    data = []
     if filePath is None:
         filePath = defaultPath
     with open(filePath, 'r', encoding='utf-8') as fp:
@@ -31,6 +32,7 @@ def loading(data, filePath=None):
             else:
                 break
     print("Successfully loaded data from " + filePath)
+    return data
 
 
 # 把对象列表的数据保存到csv文件中
