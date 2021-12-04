@@ -41,11 +41,12 @@ def save(data, filePath=None):
         filePath = defaultPath
     with open(filePath, 'w', encoding='utf-8') as fp:
         fp.write('id,name,gender,phone,wx_code\n')
-        for i in data:
-            fp.write(str(i.id) + ','
-                     + i.name + ','
-                     + i.gender + ','
-                     + i.phone + ','
-                     + i.wx_code + '\n'
-                     )
+        if data:
+            for i in data:
+                fp.write(str(i.id) + ','
+                         + i.name + ','
+                         + i.gender + ','
+                         + i.phone + ','
+                         + i.wx_code + '\n'
+                         )
     print("Successfully saved to " + filePath)
