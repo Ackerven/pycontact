@@ -72,8 +72,8 @@ def importData(data, filePath, fileType, overlay=False):
     if config['mode']['data'] == 'db':
         tmpId = db.getId()
         for i in tmp:
-            tmpId += 1
             i.id = tmpId
+            tmpId += 1
             data.append(i)
         db.insert(tmp)
     else:

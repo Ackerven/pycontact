@@ -51,7 +51,7 @@ def addContact(data):
         else:
             break
     wx_code = input("请输入微信号: ")
-    tmp = Contact(name, gender, phone, wx_code, db.getId()+1)
+    tmp = Contact(name, gender, phone, wx_code, db.getId())
     data.append(tmp)
     db.insert([tmp])
     print("成功添加联系人" + name)
