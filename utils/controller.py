@@ -36,7 +36,7 @@ def init():
             data = []
             print("loading...")
             if config['mode']['data'] == 'csv':
-                csv.loading(data)
+                data = csv.loading()
             elif config['mode']['data'] == 'xlsx':
                 data = excel.loading()
             print("Successfully loading project!")
