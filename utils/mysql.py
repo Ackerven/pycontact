@@ -62,10 +62,9 @@ def update(cid, contact):
           "phone = '{}', " \
           "wx = '{}' " \
           "WHERE id = {}"
-    cur.execute(sql.format(contact.name,contact.gender,contact.phone,contact.wx_code,cid))
+    cur.execute(sql.format(contact.name, contact.gender, contact.phone, contact.wx_code, cid))
     coon.close()
     cur.close()
-
 
 
 def insert(data):
@@ -76,3 +75,15 @@ def insert(data):
         cur.execute(sql.format(i.name, i.gender, i.phone, i.wx_code))
     coon.close()
     cur.close()
+
+
+def getId() -> int:
+    coon = getConnect()
+    cur = coon.cursor()
+    # sql = "SELECT * FROM USER ORDER BY id DESC LIMIT 1"
+    sql = "select AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_SCHEMA = 'py' AND TABLE_NAME = 'USER' limit 1"
+    cur.execute(sql)
+    coon.close()
+    cur.close()
+    # return cur.fetchone()[0]
+    return cur.fetchone()[0]

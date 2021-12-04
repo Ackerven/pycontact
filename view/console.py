@@ -9,7 +9,7 @@
 import utils.controller as controller
 import utils.tool as tool
 from model.contact import Contact
-from utils.controller import config
+import utils.mysql as db
 
 
 # 菜单
@@ -51,7 +51,9 @@ def addContact(data):
         else:
             break
     wx_code = input("请输入微信号: ")
-    data.append(Contact(name, gender, phone, wx_code))
+    tmp = Contact(name, gender, phone, wx_code, db.getId()+1)
+    data.append(tmp)
+    db.insert([tmp])
     print("成功添加联系人" + name)
 
 
@@ -176,7 +178,7 @@ def importContact(data):
             if filePath == '0':
                 return
             else:
-                fileType = filePath.split('.')[1]
+                fileType = filePath.split('.')[-1]
                 if fileType != 'csv' and fileType != 'xlsx':
                     print("文件类型错误! 取消请输入0.")
                 else:
