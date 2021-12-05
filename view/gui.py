@@ -10,8 +10,31 @@ import tkinter as tk
 
 import utils.controller as controller
 import utils.tool as tool
+import yaml
+
+from tkinter.messagebox import *
+
+file = open('config.yaml', 'r', encoding='utf-8')
+config = yaml.load(file, Loader=yaml.FullLoader)
+file.close()
 
 field_dic = {'All': 'All', '姓名': 'name', '性别': 'gender', '电话': 'phone', '微信号': 'wx_code'}
+
+
+class Futher:
+    data = []
+    tmpData = []
+    change = False
+
+    def __init__(self, data):
+        Futher.data = data
+        Futher.tmpData = data
+
+    def delData(cid, dataSet):
+        for i in range(len(dataSet)):
+            if dataSet[i].id == cid:
+                del dataSet[i]
+                return
 
 
 def handlerAdaptor(fun, **kwds):
@@ -85,7 +108,6 @@ class searchFrame(tk.Frame):
             pass
         # print("field = {}, key = {}, fuzzy = {}".format(field_dic[field], key, fuzzy))
         # print(type(key))
-        result = []
         # print(type(key), 'key=',key)
         if key == '':
             self.listBox.setData()
@@ -98,15 +120,14 @@ class searchFrame(tk.Frame):
 
 
 # 数据框
-class dataFrame(tk.Frame):
-    def __init__(self, data, info, master=None):
+class dataFrame(tk.Frame, Futher):
+    def __init__(self, info, master=None):
         tk.Frame.__init__(self, master)
         self.listBox = tk.Listbox(self)
         self.labShow = tk.Label(self)
-        self.data = data
         self.info = info
-        self.tmpData = data
         self.createWidgets()
+        self.listBox.bind("<Button-1>", self.updateList)
         self.listBox.bind("<Double-Button-1>", self.showDetail)
         # self.listBox.bind("<KeyPress-Up>", self.showDetail)
         # self.listBox.bind("<KeyPress-Down>", self.showDetail)
@@ -124,32 +145,38 @@ class dataFrame(tk.Frame):
     def setData(self, result=None):
         self.listBox.delete(0, tk.END)
         if result is None:
-            self.tmpData = self.data
+            Futher.tmpData = Futher.data
         else:
-            self.tmpData = result
-        for i in self.tmpData:
+            Futher.tmpData = result
+        for i in Futher.tmpData:
             self.listBox.insert(tk.END, i.name)
         self.labShow['text'] = '{}个联系人'.format(self.listBox.size())
 
-    def showDetail(self,event):
+    def updateList(self,event):
+        if Futher.change:
+            Futher.change = False
+            self.listBox.delete(0, tk.END)
+            # self.tmpData = self.data
+            for i in Futher.tmpData:
+                self.listBox.insert(tk.END, i.name)
+            self.labShow['text'] = '{}个联系人'.format(self.listBox.size())
+
+    def showDetail(self, event):
         for i in self.listBox.curselection():
             # print(type(self.listBox.get(i)), self.listBox.get(i))
             self.info.setData(self.tmpData[i])
 
 
-
-
-
 # 信息
-class infoFrame(tk.Frame):
+class infoFrame(tk.Frame, Futher):
     def __init__(self, master=None):
         tk.Frame.__init__(self, master)
         self.add = tk.Button(self, text='添加', command=lambda: self.createEventWidgets('ADD'))
         self.update = tk.Button(self, text='修改', command=lambda: self.createEventWidgets('UPDATE'))
-        self.delete = tk.Button(self, text='删除')
+        self.delete = tk.Button(self, text='删除', command=self.delete)
         self.addY = tk.Button(self, text='确定')
         self.addN = tk.Button(self, text='取消', command=lambda: self.cancel("ADD"))
-        self.updateY = tk.Button(self, text='确定')
+        self.updateY = tk.Button(self, text='确定', command=self.updateContact)
         self.updateN = tk.Button(self, text='取消', command=lambda: self.cancel("UPDATE"))
         self.data = None
         self.changeData = None
@@ -201,7 +228,6 @@ class infoFrame(tk.Frame):
         self.update.place(relx=0, rely=0, relwidth=0, relheight=0)
         self.delete.place(relx=0, rely=0, relwidth=0, relheight=0)
 
-
         if eventType == 'ADD':
             self.addN.place(relx=0.20, rely=0.85, relwidth=0.25, relheight=0.1)
             self.addY.place(relx=0.50, rely=0.85, relwidth=0.25, relheight=0.1)
@@ -214,18 +240,28 @@ class infoFrame(tk.Frame):
             self.updateY.place(relx=0.50, rely=0.85, relwidth=0.25, relheight=0.1)
 
     def createInfoWidgets(self):
-        nameValue = tk.Label(self, text=self.data.name, anchor=tk.W)
+        nameValue = tk.Label(self, anchor=tk.W)
         # name['bg'] = 'red'
         nameValue.place(relx=0.2, rely=0.05, relwidth=0.6, relheight=0.1)
-        genderValue = tk.Label(self, text=self.data.gender, anchor=tk.W)
+        genderValue = tk.Label(self, anchor=tk.W)
         # gender['bg'] = 'blue'
         genderValue.place(relx=0.2, rely=0.25, relwidth=0.6, relheight=0.1)
-        phoneValue = tk.Label(self, text=self.data.phone, anchor=tk.W)
+        phoneValue = tk.Label(self, anchor=tk.W)
         # phone['bg'] = 'green'
         phoneValue.place(relx=0.2, rely=0.45, relwidth=0.6, relheight=0.1)
-        wxValue = tk.Label(self, text=self.data.wx_code, anchor=tk.W)
+        wxValue = tk.Label(self, anchor=tk.W)
         # wx['bg'] = 'yellow'
         wxValue.place(relx=0.2, rely=0.65, relwidth=0.6, relheight=0.1)
+        if self.data is None:
+            nameValue['text'] = ''
+            genderValue['text'] = ''
+            phoneValue['text'] = ''
+            wxValue['text'] = ''
+        else:
+            nameValue['text'] = self.data.name
+            genderValue['text'] = self.data.gender
+            phoneValue['text'] = self.data.phone
+            wxValue['text'] = self.data.wx_code
 
     def setData(self, data=None):
         if data is not None:
@@ -240,7 +276,22 @@ class infoFrame(tk.Frame):
         gender = self.gValue.get()
         phone = self.phone.get()
         wx = self.wx.get()
-
+        if tool.isPhone(phone):
+            # TODO fix bug
+            self.data.name = name
+            self.data.gender = gender
+            self.data.phone = phone
+            self.data.wx_code = wx
+            controller.modify(Futher.data, self.data.id, name, gender, phone, wx)
+            showinfo(title='修改', message='修改成功')
+            self.setData()
+            self.updateN.place(relx=0, rely=0, relwidth=0, relheight=0)
+            self.updateY.place(relx=0, rely=0, relwidth=0, relheight=0)
+            self.add.place(relx=0.04, rely=0.85, relwidth=0.25, relheight=0.1)
+            self.update.place(relx=0.32, rely=0.85, relwidth=0.25, relheight=0.1)
+            self.delete.place(relx=0.60, rely=0.85, relwidth=0.25, relheight=0.1)
+        else:
+            showerror(title='修改', message='电话号码错误')
 
     def cancel(self, eventType):
         if eventType == 'ADD':
@@ -254,10 +305,22 @@ class infoFrame(tk.Frame):
         self.update.place(relx=0.32, rely=0.85, relwidth=0.25, relheight=0.1)
         self.delete.place(relx=0.60, rely=0.85, relwidth=0.25, relheight=0.1)
 
+    def delete(self):
+        if controller.delete(Futher.data, self.data.id):
+            Futher.change = True
+            showinfo(title='删除', message='删除成功')
+            Futher.delData(self.data.id, Futher.tmpData)
+            self.data = None
+            self.setData()
+        else:
+            showinfo(title='删除', message='删除失败')
+
+
 def gui():
     # 初始化
     data = []
     data = controller.init()
+    f = Futher(data)
 
     # 创建主窗口并设置属性
     root = tk.Tk()
@@ -273,10 +336,10 @@ def gui():
     # details info
     i = infoFrame(root)
     i.place(relx=0.4, rely=0.125, relwidth=0.55, relheight=0.85)
-    i.setData(data[0])
+    # i.setData(data[0])
 
     # 列表部分
-    d = dataFrame(data, i, root)
+    d = dataFrame(i, root)
     d.place(relx=0.02, rely=0.125, relwidth=0.35, relheight=0.85)
 
     # 搜索部分
