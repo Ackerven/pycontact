@@ -50,6 +50,11 @@ def init():
             print("Successfully initialized project!")
             print("Enjoy yourself! ")
 
+# 添加功能
+def add(data, tmp):
+    data.append(tmp)
+    if config['mode']['data'] == 'db':
+        db.insert([tmp])
 
 
 # 把用户列表数据写入文件
@@ -154,7 +159,8 @@ def delete(data, cid):
     pos = queryPos(data, cid)
     if pos != -1:
         del data[pos]
-        db.delete(cid)
+        if config['mode']['data'] == 'db':
+            db.delete(cid)
         return True
     else:
         return False
@@ -166,7 +172,8 @@ def modify(data, cid, name, gender, phone, wx_code):
     if pos != -1:
         tmp = Contact(name, gender, phone, wx_code, cid=cid)
         data[pos] = tmp
-        db.update(cid, tmp)
+        if config['mode']['data'] == 'db':
+            db.update(cid, tmp)
         return True
     else:
         return False
