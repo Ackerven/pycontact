@@ -9,7 +9,8 @@
 import tkinter as tk
 import utils.controller as controller
 
-field_dic = {'All':'All','姓名': 'name', '性别':'gender', '电话':'phone', '微信号':'wx'}
+field_dic = {'All': 'All', '姓名': 'name', '性别': 'gender', '电话': 'phone', '微信号': 'wx_code'}
+
 
 def handlerAdaptor(fun, **kwds):
     '''事件处理函数的适配器，相当于中介，那个event是从那里来的呢，我也纳闷，这也许就是python的伟大之处吧'''
@@ -40,9 +41,11 @@ def Meun(root):
     # 把菜单栏添加到根窗口
     root['menu'] = menubar
 
-class searcFrame(tk.Frame):
-    def __init__(self, master=None):
+
+class searchFrame(tk.Frame):
+    def __init__(self, listBox, master=None):
         tk.Frame.__init__(self, master)
+        self.listBox = listBox
         # self.place(relx=0, rely=0, relwidth=1, relheight=0.1)
         self.createWidgets()
 
@@ -71,12 +74,62 @@ class searcFrame(tk.Frame):
 
     # 搜索框事件
     def search(self, lastChar, field, key, fuzzy):
-        if lastChar.isalnum():
-            key += lastChar
+        try:
+            if lastChar.isalnum():
+                key += lastChar
+            elif ord(lastChar) == 8:
+                key = key[0:-1]
+        except:
+            pass
+        # print("field = {}, key = {}, fuzzy = {}".format(field_dic[field], key, fuzzy))
+        # print(type(key))
+        result = []
+        # print(type(key), 'key=',key)
+        if key == '':
+            self.listBox.setData()
+        else:
+            if field == 'All':
+                result = controller.search(self.listBox.data, key, fuzzy=fuzzy)
+            else:
+                result = controller.search(self.listBox.data, key, field_dic[field], fuzzy)
+            self.listBox.setData(result)
 
-        print("field = {}, key = {}, fuzzy = {}".format(field_dic[field], key, fuzzy))
+
+# 数据框
+class dataFrame(tk.Frame):
+    def __init__(self, data, master=None):
+        tk.Frame.__init__(self, master)
+        self.listBox = tk.Listbox(self)
+        self.labShow = tk.Label(self)
+        self.data = data
+        self.createWidgets()
+
+    def createWidgets(self):
+        # 列表框
+        self.setData()
+        self.listBox.place(relx=0.045, rely=0.03, relwidth=0.9, relheight=0.9)
+
+        # 提示信息
+        # self.labShow['bg'] = 'red'
+        self.labShow['text'] = '{}个联系人'.format(len(self.data))
+        self.labShow.place(relx=0.045, rely=0.95, relwidth=0.9, relheight=0.05)
+
+    def setData(self, result=None):
+        self.listBox.delete(0, tk.END)
+        if result is None:
+            for i in self.data:
+                self.listBox.insert(tk.END, i.name)
+            self.labShow['text'] = '{}个联系人'.format(self.listBox.size())
+        else:
+            for i in result:
+                self.listBox.insert(tk.END, i.name)
+            self.labShow['text'] = '{}个联系人'.format(self.listBox.size())
 
 def gui():
+    # 初始化
+    data = []
+    data = controller.init()
+
     # 创建主窗口并设置属性
     root = tk.Tk()
     root.title('Contact')
@@ -88,9 +141,12 @@ def gui():
     # 添加菜单栏
     Meun(root)
 
-    # 搜索部分
-    s = searcFrame(root)
-    s.place(relx=0, rely=0, relwidth=1, relheight=0.1)
+    # 列表部分
+    d = dataFrame(data, root)
+    d.place(relx=0.02, rely=0.125, relwidth=0.45, relheight=0.85)
 
+    # 搜索部分
+    s = searchFrame(d, root)
+    s.place(relx=0, rely=0, relwidth=1, relheight=0.1)
 
     root.mainloop()
