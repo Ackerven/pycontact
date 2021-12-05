@@ -39,6 +39,7 @@ class DataSource:
                 del dataSet[i]
                 return
 
+
 # 菜单栏
 def Meun(root):
     # 创建主菜单栏
@@ -58,12 +59,13 @@ def Meun(root):
     menufile.add_command(label='导入')
     menufile.add_command(label='导出')
     menuset.add_command(label='数据源')
-    menuhelp.add_command(label='关于')
+    menuhelp.add_command(label='关于', command=about)
 
     # 把菜单栏添加到根窗口
     root['menu'] = menubar
 
 
+# 搜索框
 class SearchFrame(tk.Frame):
     def __init__(self, listBox, master=None):
         tk.Frame.__init__(self, master)
@@ -162,7 +164,7 @@ class DataFrame(tk.Frame, DataSource):
             self.info.setData(self.tmpData[i])
 
 
-# 信息
+# 信息框
 class InfoFrame(tk.Frame, DataSource):
     def __init__(self, master=None):
         tk.Frame.__init__(self, master)
@@ -327,6 +329,23 @@ class InfoFrame(tk.Frame, DataSource):
             self.setData()
         else:
             showinfo(title='删除', message='删除失败')
+
+
+# 关于
+def about():
+    root = tk.Tk()
+    root.title("关于")
+    root.geometry("300x200")
+    root.resizable(0, 0)
+    str = 'Author: Ackerven\n'
+    str += '本项目开源，遵循GPL3.0协议\n'
+    str += 'Github: https://ackerven/pycontact'
+    w = tk.Message(root)
+    w.config(text=str)
+    w['anchor'] = tk.CENTER
+    w['aspect'] = 300
+    w.place(relx=0, rely = 0, relwidth=1, relheight=1)
+    root.mainloop()
 
 
 def gui():
