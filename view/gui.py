@@ -47,18 +47,18 @@ def Meun(root):
 
     # 创建菜单 tear off 为 1 时可以独立出来
     menufile = tk.Menu(menubar, tearoff=0)
-    menuset = tk.Menu(menubar, tearoff=0)
+    # menuset = tk.Menu(menubar, tearoff=0)
     menuhelp = tk.Menu(menubar, tearoff=0)
 
     # 把菜单作为层叠菜单添加到主菜单
     menubar.add_cascade(label='文件', menu=menufile)
-    menubar.add_cascade(label='设置', menu=menuset)
+    # menubar.add_cascade(label='设置', menu=menuset)
     menubar.add_cascade(label='帮助', menu=menuhelp)
 
     # 添加菜单项到菜单
     menufile.add_command(label='导入', command=importData)
-    menufile.add_command(label='导出')
-    menuset.add_command(label='数据源')
+    menufile.add_command(label='导出', command=exportData)
+    # menuset.add_command(label='数据源')
     menuhelp.add_command(label='关于', command=about)
 
     # 把菜单栏添加到根窗口
@@ -356,6 +356,15 @@ def importData():
     controller.importData(DataSource.data, filePath, fileType, overlay=overlay)
     DataSource.change = True
     showinfo(title='导入', message='导入成功')
+
+
+# 导出
+def exportData():
+    filePath = askopenfilename(filetypes=[('csv文件', '.csv'), ('xlsx文件', '.xlsx')], defaultextension='.csv')
+    fileType = filePath.split('.')[-1]
+    controller.export(DataSource.data, filePath, fileType)
+    DataSource.change = True
+    showinfo(title='导出', message='导出成功')
 
 def gui():
     # 初始化
