@@ -9,7 +9,7 @@
 import tkinter as tk
 import utils.controller as controller
 
-field_dic = {'姓名': 'name', '性别':'gender', '电话':'phone', '微信号':'wx'}
+field_dic = {'All':'All','姓名': 'name', '性别':'gender', '电话':'phone', '微信号':'wx'}
 
 def handlerAdaptor(fun, **kwds):
     '''事件处理函数的适配器，相当于中介，那个event是从那里来的呢，我也纳闷，这也许就是python的伟大之处吧'''
@@ -40,41 +40,41 @@ def Meun(root):
     # 把菜单栏添加到根窗口
     root['menu'] = menubar
 
+class searcFrame(tk.Frame):
+    def __init__(self, master=None):
+        tk.Frame.__init__(self, master)
+        # self.place(relx=0, rely=0, relwidth=1, relheight=0.1)
+        self.createWidgets()
 
-def searchFrame(root):
-    # 定义框架
-    frame = tk.Frame(root, bg='gray')
-    frame.place(relx=0, rely=0, relwidth=1, relheight=0.1)
+    def createWidgets(self):
+        # 添加控件
+        # 添加多选框
+        vom = tk.StringVar(self)
+        vom.set('All')
+        om = tk.OptionMenu(self, vom, 'All', '姓名', '性别', '电话', '微信号')
+        om.place(relx=0.02, rely=0.2, relwidth=0.13, relheight=0.6)
 
-    # 添加控件
-    # 添加多选框
-    vom = tk.StringVar(frame)
-    vom.set('All')
-    om = tk.OptionMenu(frame, vom, 'All', '姓名', '性别', '电话', '微信号')
-    om.place(relx=0.02, rely=0.2, relwidth=0.13, relheight=0.6)
+        # 添加输入框
+        vtext = tk.StringVar(self)
+        w1 = tk.Entry(self, textvariable=vtext)
+        w1.place(relx=0.16, rely=0.2, relwidth=0.6, relheight=0.6)
 
-    # 添加输入框
-    vtext = tk.StringVar(frame)
-    w1 = tk.Entry(frame, textvariable=vtext)
-    w1.place(relx=0.16, rely=0.2, relwidth=0.6, relheight=0.6)
+        # 添加复选框
+        vcb = tk.BooleanVar(self)
+        vcb.set(False)
+        w = tk.Checkbutton(self, text='模糊搜索', onvalue=True, offvalue=False, variable=vcb)
+        w.place(relx=0.77, rely=0.2, relwidth=0.15, relheight=0.6)
 
-    # 添加复选框
-    vcb = tk.BooleanVar(frame)
-    vcb.set(False)
-    w = tk.Checkbutton(frame, text='模糊搜索', onvalue=True, offvalue=False, variable=vcb)
-    w.place(relx=0.77, rely=0.2, relwidth=0.15, relheight=0.6)
+        # 添加事件
+        # w1.bind("<KeyPress>", handlerAdaptor(search, field=vom.get(), key=vtext.get(), fuzzy=vcb.get()))
+        w1.bind("<KeyPress>", lambda event: self.search(event.char, vom.get(), vtext.get(), vcb.get()))
 
-    # 添加事件
-    # w1.bind("<KeyPress>", handlerAdaptor(search, field=vom.get(), key=vtext.get(), fuzzy=vcb.get()))
-    w1.bind("<KeyPress>", lambda event: search(event.char, vom.get(), vtext.get(), vcb.get()))
+    # 搜索框事件
+    def search(self, lastChar, field, key, fuzzy):
+        if lastChar.isalnum():
+            key += lastChar
 
-
-# 搜索框事件
-def search(lastChar, field, key, fuzzy):
-    if lastChar.isalnum():
-        key += lastChar
-
-    print("field = {}, key = {}, fuzzy = {}".format(field_dic[field], key, fuzzy))
+        print("field = {}, key = {}, fuzzy = {}".format(field_dic[field], key, fuzzy))
 
 def gui():
     # 创建主窗口并设置属性
@@ -89,6 +89,8 @@ def gui():
     Meun(root)
 
     # 搜索部分
-    searchFrame(root)
+    s = searcFrame(root)
+    s.place(relx=0, rely=0, relwidth=1, relheight=0.1)
+
 
     root.mainloop()
