@@ -7,12 +7,14 @@
 # @Copyright Copyright(C) 2021 Ackerven All rights reserved.
 
 import tkinter as tk
+from tkinter.messagebox import *
 
-import utils.controller as controller
-import utils.tool as tool
 import yaml
 
-from tkinter.messagebox import *
+import utils.controller as controller
+import utils.mysql as db
+import utils.tool as tool
+from model.contact import Contact
 
 file = open('config.yaml', 'r', encoding='utf-8')
 config = yaml.load(file, Loader=yaml.FullLoader)
@@ -152,7 +154,7 @@ class dataFrame(tk.Frame, Futher):
             self.listBox.insert(tk.END, i.name)
         self.labShow['text'] = '{}个联系人'.format(self.listBox.size())
 
-    def updateList(self,event):
+    def updateList(self, event):
         if Futher.change:
             Futher.change = False
             self.listBox.delete(0, tk.END)
@@ -174,7 +176,7 @@ class infoFrame(tk.Frame, Futher):
         self.add = tk.Button(self, text='添加', command=lambda: self.createEventWidgets('ADD'))
         self.update = tk.Button(self, text='修改', command=lambda: self.createEventWidgets('UPDATE'))
         self.delete = tk.Button(self, text='删除', command=self.delete)
-        self.addY = tk.Button(self, text='确定')
+        self.addY = tk.Button(self, text='确定', command=self.addContact)
         self.addN = tk.Button(self, text='取消', command=lambda: self.cancel("ADD"))
         self.updateY = tk.Button(self, text='确定', command=self.updateContact)
         self.updateN = tk.Button(self, text='取消', command=lambda: self.cancel("UPDATE"))
@@ -269,7 +271,26 @@ class infoFrame(tk.Frame, Futher):
         self.createInfoWidgets()
 
     def addContact(self):
-        pass
+        name = self.name.get()
+        gender = self.gValue.get()
+        phone = self.phone.get()
+        wx = self.wx.get()
+        if tool.isPhone(phone):
+            if config['mode']['data'] == 'db':
+                tmpId = db.getId()
+                controller.add(Futher.data, Contact(name, gender, phone, wx, tmpId))
+            else:
+                controller.add(Futher.data, Contact(name, gender, phone, wx))
+            Futher.change = True
+            showinfo(title='添加', message='添加成功')
+            self.setData()
+            self.addN.place(relx=0, rely=0, relwidth=0, relheight=0)
+            self.addY.place(relx=0, rely=0, relwidth=0, relheight=0)
+            self.add.place(relx=0.04, rely=0.85, relwidth=0.25, relheight=0.1)
+            self.update.place(relx=0.32, rely=0.85, relwidth=0.25, relheight=0.1)
+            self.delete.place(relx=0.60, rely=0.85, relwidth=0.25, relheight=0.1)
+        else:
+            showerror(title='添加', message='电话号码错误')
 
     def updateContact(self):
         name = self.name.get()
@@ -277,7 +298,6 @@ class infoFrame(tk.Frame, Futher):
         phone = self.phone.get()
         wx = self.wx.get()
         if tool.isPhone(phone):
-            # TODO fix bug
             self.data.name = name
             self.data.gender = gender
             self.data.phone = phone
