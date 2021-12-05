@@ -23,33 +23,28 @@ file.close()
 field_dic = {'All': 'All', '姓名': 'name', '性别': 'gender', '电话': 'phone', '微信号': 'wx_code'}
 
 
-class Futher:
+class DataSource:
     data = []
     tmpData = []
     change = False
 
     def __init__(self, data):
-        Futher.data = data
-        Futher.tmpData = data
+        DataSource.data = data
+        DataSource.tmpData = data
 
+    @staticmethod
     def delData(cid, dataSet):
         for i in range(len(dataSet)):
             if dataSet[i].id == cid:
                 del dataSet[i]
                 return
 
-
-def handlerAdaptor(fun, **kwds):
-    '''事件处理函数的适配器，相当于中介，那个event是从那里来的呢，我也纳闷，这也许就是python的伟大之处吧'''
-    return lambda event, fun=fun, kwds=kwds: fun(event, **kwds)
-
-
 # 菜单栏
 def Meun(root):
     # 创建主菜单栏
     menubar = tk.Menu(root)
 
-    # 创建菜单 tearoff 为 1 时可以独立出来
+    # 创建菜单 tear off 为 1 时可以独立出来
     menufile = tk.Menu(menubar, tearoff=0)
     menuset = tk.Menu(menubar, tearoff=0)
     menuhelp = tk.Menu(menubar, tearoff=0)
@@ -69,11 +64,10 @@ def Meun(root):
     root['menu'] = menubar
 
 
-class searchFrame(tk.Frame):
+class SearchFrame(tk.Frame):
     def __init__(self, listBox, master=None):
         tk.Frame.__init__(self, master)
         self.listBox = listBox
-        # self.place(relx=0, rely=0, relwidth=1, relheight=0.1)
         self.createWidgets()
 
     def createWidgets(self):
@@ -85,8 +79,8 @@ class searchFrame(tk.Frame):
         om.place(relx=0.02, rely=0.2, relwidth=0.13, relheight=0.6)
 
         # 添加输入框
-        vtext = tk.StringVar(self)
-        w1 = tk.Entry(self, textvariable=vtext)
+        vKey = tk.StringVar(self)
+        w1 = tk.Entry(self, textvariable=vKey)
         w1.place(relx=0.16, rely=0.2, relwidth=0.6, relheight=0.6)
 
         # 添加复选框
@@ -96,8 +90,7 @@ class searchFrame(tk.Frame):
         w.place(relx=0.77, rely=0.2, relwidth=0.15, relheight=0.6)
 
         # 添加事件
-        # w1.bind("<KeyPress>", handlerAdaptor(search, field=vom.get(), key=vtext.get(), fuzzy=vcb.get()))
-        w1.bind("<KeyPress>", lambda event: self.search(event.char, vom.get(), vtext.get(), vcb.get()))
+        w1.bind("<KeyPress>", lambda event: self.search(event.char, vom.get(), vKey.get(), vcb.get()))
 
     # 搜索框事件
     def search(self, lastChar, field, key, fuzzy):
@@ -122,7 +115,7 @@ class searchFrame(tk.Frame):
 
 
 # 数据框
-class dataFrame(tk.Frame, Futher):
+class DataFrame(tk.Frame, DataSource):
     def __init__(self, info, master=None):
         tk.Frame.__init__(self, master)
         self.listBox = tk.Listbox(self)
@@ -147,19 +140,19 @@ class dataFrame(tk.Frame, Futher):
     def setData(self, result=None):
         self.listBox.delete(0, tk.END)
         if result is None:
-            Futher.tmpData = Futher.data
+            DataSource.tmpData = DataSource.data
         else:
-            Futher.tmpData = result
-        for i in Futher.tmpData:
+            DataSource.tmpData = result
+        for i in DataSource.tmpData:
             self.listBox.insert(tk.END, i.name)
         self.labShow['text'] = '{}个联系人'.format(self.listBox.size())
 
     def updateList(self, event):
-        if Futher.change:
-            Futher.change = False
+        if DataSource.change:
+            DataSource.change = False
             self.listBox.delete(0, tk.END)
             # self.tmpData = self.data
-            for i in Futher.tmpData:
+            for i in DataSource.tmpData:
                 self.listBox.insert(tk.END, i.name)
             self.labShow['text'] = '{}个联系人'.format(self.listBox.size())
 
@@ -170,7 +163,7 @@ class dataFrame(tk.Frame, Futher):
 
 
 # 信息
-class infoFrame(tk.Frame, Futher):
+class InfoFrame(tk.Frame, DataSource):
     def __init__(self, master=None):
         tk.Frame.__init__(self, master)
         self.add = tk.Button(self, text='添加', command=lambda: self.createEventWidgets('ADD'))
@@ -278,10 +271,10 @@ class infoFrame(tk.Frame, Futher):
         if tool.isPhone(phone):
             if config['mode']['data'] == 'db':
                 tmpId = db.getId()
-                controller.add(Futher.data, Contact(name, gender, phone, wx, tmpId))
+                controller.add(DataSource.data, Contact(name, gender, phone, wx, tmpId))
             else:
-                controller.add(Futher.data, Contact(name, gender, phone, wx))
-            Futher.change = True
+                controller.add(DataSource.data, Contact(name, gender, phone, wx))
+            DataSource.change = True
             showinfo(title='添加', message='添加成功')
             self.setData()
             self.addN.place(relx=0, rely=0, relwidth=0, relheight=0)
@@ -302,7 +295,7 @@ class infoFrame(tk.Frame, Futher):
             self.data.gender = gender
             self.data.phone = phone
             self.data.wx_code = wx
-            controller.modify(Futher.data, self.data.id, name, gender, phone, wx)
+            controller.modify(DataSource.data, self.data.id, name, gender, phone, wx)
             showinfo(title='修改', message='修改成功')
             self.setData()
             self.updateN.place(relx=0, rely=0, relwidth=0, relheight=0)
@@ -326,10 +319,10 @@ class infoFrame(tk.Frame, Futher):
         self.delete.place(relx=0.60, rely=0.85, relwidth=0.25, relheight=0.1)
 
     def delete(self):
-        if controller.delete(Futher.data, self.data.id):
-            Futher.change = True
+        if controller.delete(DataSource.data, self.data.id):
+            DataSource.change = True
             showinfo(title='删除', message='删除成功')
-            Futher.delData(self.data.id, Futher.tmpData)
+            DataSource.delData(self.data.id, DataSource.tmpData)
             self.data = None
             self.setData()
         else:
@@ -338,9 +331,8 @@ class infoFrame(tk.Frame, Futher):
 
 def gui():
     # 初始化
-    data = []
     data = controller.init()
-    f = Futher(data)
+    DataSource(data)
 
     # 创建主窗口并设置属性
     root = tk.Tk()
@@ -354,16 +346,16 @@ def gui():
     Meun(root)
 
     # details info
-    i = infoFrame(root)
+    i = InfoFrame(root)
     i.place(relx=0.4, rely=0.125, relwidth=0.55, relheight=0.85)
     # i.setData(data[0])
 
     # 列表部分
-    d = dataFrame(i, root)
+    d = DataFrame(i, root)
     d.place(relx=0.02, rely=0.125, relwidth=0.35, relheight=0.85)
 
     # 搜索部分
-    s = searchFrame(d, root)
+    s = SearchFrame(d, root)
     s.place(relx=0, rely=0, relwidth=1, relheight=0.1)
 
     root.mainloop()
