@@ -8,7 +8,7 @@
 
 import tkinter as tk
 from tkinter.messagebox import *
-
+from tkinter.filedialog import *
 import yaml
 
 import utils.controller as controller
@@ -56,7 +56,7 @@ def Meun(root):
     menubar.add_cascade(label='帮助', menu=menuhelp)
 
     # 添加菜单项到菜单
-    menufile.add_command(label='导入')
+    menufile.add_command(label='导入', command=importData)
     menufile.add_command(label='导出')
     menuset.add_command(label='数据源')
     menuhelp.add_command(label='关于', command=about)
@@ -344,9 +344,18 @@ def about():
     w.config(text=str)
     w['anchor'] = tk.CENTER
     w['aspect'] = 300
-    w.place(relx=0, rely = 0, relwidth=1, relheight=1)
+    w.place(relx=0, rely=0, relwidth=1, relheight=1)
     root.mainloop()
 
+
+# 导入
+def importData():
+    filePath = askopenfilename(filetypes=[('csv文件', '.csv'),('xlsx文件', '.xlsx')])
+    fileType = filePath.split('.')[-1]
+    overlay = askyesno(title='导入', message='是否覆盖原有的数据')
+    controller.importData(DataSource.data, filePath, fileType, overlay=overlay)
+    DataSource.change = True
+    showinfo(title='导入', message='导入成功')
 
 def gui():
     # 初始化
