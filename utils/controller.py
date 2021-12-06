@@ -79,6 +79,8 @@ def importData(data, filePath, fileType, overlay=False):
         tmp = excel.loading(filePath)
 
     if config['mode']['data'] == 'db':
+        if overlay:
+            db.overlay()
         tmpId = db.getId()
         for i in tmp:
             i.id = tmpId
