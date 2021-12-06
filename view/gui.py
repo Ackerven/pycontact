@@ -108,9 +108,9 @@ class SearchFrame(tk.Frame):
             self.listBox.setData()
         else:
             if field == 'All':
-                result = controller.search(self.listBox.data, key, fuzzy=fuzzy)
+                result = controller.search(DataSet.data, key, fuzzy=fuzzy)
             else:
-                result = controller.search(self.listBox.data, key, field_dic[field], fuzzy)
+                result = controller.search(DataSet.data, key, field_dic[field], fuzzy)
             self.listBox.setData(result)
 
 
@@ -173,6 +173,7 @@ class InfoFrame(tk.Frame):
         self.addN = tk.Button(self, text='取消', command=lambda: self.cancel("ADD"))
         self.updateY = tk.Button(self, text='确定', command=self.updateContact)
         self.updateN = tk.Button(self, text='取消', command=lambda: self.cancel("UPDATE"))
+        self.data = None
         self.name = None
         self.phone = None
         self.gValue = tk.StringVar(self)
@@ -279,7 +280,7 @@ class InfoFrame(tk.Frame):
                 controller.add(DataSet.data, Contact(name, gender, phone, wx))
             DataSet.change = True
             showinfo(title='添加', message='添加成功')
-            self.recover()
+            self.recover('ADD')
         else:
             showerror(title='添加', message='电话号码错误')
 
@@ -296,15 +297,19 @@ class InfoFrame(tk.Frame):
             self.data.wx_code = wx
             controller.modify(DataSet.data, self.data.id, name, gender, phone, wx)
             showinfo(title='修改', message='修改成功')
-            self.recover()
+            self.recover('UPDATE')
         else:
             showerror(title='修改', message='电话号码错误')
 
     # 更新或者添加成功后按钮复原
-    def recover(self):
+    def recover(self, typeEvent):
         self.setData()
-        self.updateN.place(relx=0, rely=0, relwidth=0, relheight=0)
-        self.updateY.place(relx=0, rely=0, relwidth=0, relheight=0)
+        if typeEvent == 'ADD':
+            self.addN.place(relx=0, rely=0, relwidth=0, relheight=0)
+            self.addY.place(relx=0, rely=0, relwidth=0, relheight=0)
+        else:
+            self.updateN.place(relx=0, rely=0, relwidth=0, relheight=0)
+            self.updateY.place(relx=0, rely=0, relwidth=0, relheight=0)
         self.add.place(relx=0.04, rely=0.85, relwidth=0.25, relheight=0.1)
         self.update.place(relx=0.32, rely=0.85, relwidth=0.25, relheight=0.1)
         self.delete.place(relx=0.60, rely=0.85, relwidth=0.25, relheight=0.1)
