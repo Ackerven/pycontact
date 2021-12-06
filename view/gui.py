@@ -368,7 +368,7 @@ def importData():
 
 # 导出
 def exportData():
-    filePath = askopenfilename(filetypes=[('csv文件', '.csv'), ('xlsx文件', '.xlsx')], defaultextension='.csv')
+    filePath = asksaveasfilename(filetypes=[('csv文件', '.csv'), ('xlsx文件', '.xlsx')], defaultextension='.csv', initialfile='default')
     fileType = filePath.split('.')[-1]
     controller.export(DataSet.data, filePath, fileType)
     DataSet.change = True
