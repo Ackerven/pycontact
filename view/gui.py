@@ -361,19 +361,30 @@ def about():
 
 # 导入
 def importData():
-    filePath = askopenfilename(filetypes=[('csv文件', '.csv'),('xlsx文件', '.xlsx')])
-    fileType = filePath.split('.')[-1]
-    overlay = askyesno(title='导入', message='是否覆盖原有的数据')
-    controller.importData(DataSet.data, filePath, fileType, overlay=overlay)
-    DataSet.change = True
-    showinfo(title='导入', message='导入成功')
+    filePath = ''
+    fileType = ''
+    try:
+        filePath = askopenfilename(filetypes=[('csv文件', '.csv'), ('xlsx文件', '.xlsx')])
+        fileType = filePath.split('.')[-1]
+    except:
+        showinfo(title='导入', message='导入失败')
+        return
+    try:
+        overlay = askyesno(title='导入', message='是否覆盖原有的数据')
+        controller.importData(DataSet.data, filePath, fileType, overlay=overlay)
+        DataSet.change = True
+        showinfo(title='导入', message='导入成功')
+    except:
+        showinfo(title='导入', message='导入失败')
+
 
 
 # 导出
 def exportData():
-    filePath = asksaveasfilename(filetypes=[('csv文件', '.csv'), ('xlsx文件', '.xlsx')], defaultextension='.csv', initialfile='default')
-    fileType = filePath.split('.')[-1]
     try:
+        filePath = asksaveasfilename(filetypes=[('csv文件', '.csv'), ('xlsx文件', '.xlsx')], defaultextension='.csv',
+                                     initialfile='default')
+        fileType = filePath.split('.')[-1]
         controller.export(DataSet.data, filePath, fileType)
         DataSet.change = True
         showinfo(title='导出', message='导出成功')
