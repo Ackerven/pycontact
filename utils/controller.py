@@ -49,12 +49,16 @@ def init():
                 os.mkdir('source')
             print("Successfully initialized project!")
             print("Enjoy yourself! ")
+            return []
+
 
 # 添加功能
 def add(data, tmp):
-    data.append(tmp)
     if config['mode']['data'] == 'db':
+        tmpId = db.getId()
+        tmp.id = tmpId
         db.insert([tmp])
+    data.append(tmp)
 
 
 # 把用户列表数据写入文件
@@ -75,6 +79,8 @@ def importData(data, filePath, fileType, overlay=False):
         tmp = excel.loading(filePath)
 
     if config['mode']['data'] == 'db':
+        if overlay:
+            db.overlay()
         tmpId = db.getId()
         for i in tmp:
             i.id = tmpId

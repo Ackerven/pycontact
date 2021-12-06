@@ -329,6 +329,9 @@ class InfoFrame(tk.Frame):
 
     # 删除联系人事件
     def delete(self):
+        confirm = askyesno(title='删除', message='确定删除')
+        if not confirm:
+            return
         if controller.delete(DataSet.data, self.data.id):
             DataSet.change = True
             showinfo(title='删除', message='删除成功')
@@ -407,3 +410,5 @@ def gui():
     s.place(relx=0, rely=0, relwidth=1, relheight=0.1)
 
     root.mainloop()
+
+    controller.save(data)

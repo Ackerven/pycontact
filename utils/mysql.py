@@ -8,6 +8,7 @@
 
 import pymysql
 import yaml
+
 from model.contact import Contact
 
 file = open('config.yaml', 'r', encoding='utf-8')
@@ -87,3 +88,11 @@ def getId() -> int:
     cur.close()
     # return cur.fetchone()[0]
     return cur.fetchone()[0]
+
+def overlay():
+    coon = getConnect()
+    cur = coon.cursor()
+    sql = "TRUNCATE TABLE USER"
+    cur.execute(sql)
+    coon.close()
+    cur.close()

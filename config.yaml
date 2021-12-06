@@ -3,6 +3,8 @@
 # config.yaml
 
 # 程序启动时加载数据类型
+# view: Console GUI
+# data: csv xlsx db
 mode:
   view: GUI
   data: db
