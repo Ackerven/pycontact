@@ -23,14 +23,14 @@ file.close()
 field_dic = {'All': 'All', '姓名': 'name', '性别': 'gender', '电话': 'phone', '微信号': 'wx_code'}
 
 
-class DataSource:
+class DataSet:
     data = []
     tmpData = []
     change = False
 
     def __init__(self, data):
-        DataSource.data = data
-        DataSource.tmpData = data
+        DataSet.data = data
+        DataSet.tmpData = data
 
     @staticmethod
     def delData(cid, dataSet):
@@ -117,14 +117,14 @@ class SearchFrame(tk.Frame):
 
 
 # 数据框
-class DataFrame(tk.Frame, DataSource):
+class DataFrame(tk.Frame):
     def __init__(self, info, master=None):
         tk.Frame.__init__(self, master)
         self.listBox = tk.Listbox(self)
         self.labShow = tk.Label(self)
         self.info = info
         self.createWidgets()
-        self.listBox.bind("<Button-1>", self.updateList)
+        self.listBox.bind("<Enter>", self.updateList)
         self.listBox.bind("<Double-Button-1>", self.showDetail)
         # self.listBox.bind("<KeyPress-Up>", self.showDetail)
         # self.listBox.bind("<KeyPress-Down>", self.showDetail)
@@ -136,36 +136,37 @@ class DataFrame(tk.Frame, DataSource):
 
         # 提示信息
         # self.labShow['bg'] = 'red'
-        self.labShow['text'] = '{}个联系人'.format(len(self.data))
+        self.labShow['text'] = '{}个联系人'.format(len(DataSet.data))
         self.labShow.place(relx=0.045, rely=0.95, relwidth=0.9, relheight=0.05)
 
     def setData(self, result=None):
         self.listBox.delete(0, tk.END)
         if result is None:
-            DataSource.tmpData = DataSource.data
+            DataSet.tmpData = DataSet.data
         else:
-            DataSource.tmpData = result
-        for i in DataSource.tmpData:
+            DataSet.tmpData = result
+        for i in DataSet.tmpData:
             self.listBox.insert(tk.END, i.name)
         self.labShow['text'] = '{}个联系人'.format(self.listBox.size())
 
     def updateList(self, event):
-        if DataSource.change:
-            DataSource.change = False
+        print('calling updateList...')
+        if DataSet.change:
+            DataSet.change = False
             self.listBox.delete(0, tk.END)
             # self.tmpData = self.data
-            for i in DataSource.tmpData:
+            for i in DataSet.tmpData:
                 self.listBox.insert(tk.END, i.name)
             self.labShow['text'] = '{}个联系人'.format(self.listBox.size())
 
     def showDetail(self, event):
         for i in self.listBox.curselection():
             # print(type(self.listBox.get(i)), self.listBox.get(i))
-            self.info.setData(self.tmpData[i])
+            self.info.setData(DataSet.tmpData[i])
 
 
 # 信息框
-class InfoFrame(tk.Frame, DataSource):
+class InfoFrame(tk.Frame):
     def __init__(self, master=None):
         tk.Frame.__init__(self, master)
         self.add = tk.Button(self, text='添加', command=lambda: self.createEventWidgets('ADD'))
@@ -273,10 +274,10 @@ class InfoFrame(tk.Frame, DataSource):
         if tool.isPhone(phone):
             if config['mode']['data'] == 'db':
                 tmpId = db.getId()
-                controller.add(DataSource.data, Contact(name, gender, phone, wx, tmpId))
+                controller.add(DataSet.data, Contact(name, gender, phone, wx, tmpId))
             else:
-                controller.add(DataSource.data, Contact(name, gender, phone, wx))
-            DataSource.change = True
+                controller.add(DataSet.data, Contact(name, gender, phone, wx))
+            DataSet.change = True
             showinfo(title='添加', message='添加成功')
             self.setData()
             self.addN.place(relx=0, rely=0, relwidth=0, relheight=0)
@@ -297,7 +298,7 @@ class InfoFrame(tk.Frame, DataSource):
             self.data.gender = gender
             self.data.phone = phone
             self.data.wx_code = wx
-            controller.modify(DataSource.data, self.data.id, name, gender, phone, wx)
+            controller.modify(DataSet.data, self.data.id, name, gender, phone, wx)
             showinfo(title='修改', message='修改成功')
             self.setData()
             self.updateN.place(relx=0, rely=0, relwidth=0, relheight=0)
@@ -321,10 +322,10 @@ class InfoFrame(tk.Frame, DataSource):
         self.delete.place(relx=0.60, rely=0.85, relwidth=0.25, relheight=0.1)
 
     def delete(self):
-        if controller.delete(DataSource.data, self.data.id):
-            DataSource.change = True
+        if controller.delete(DataSet.data, self.data.id):
+            DataSet.change = True
             showinfo(title='删除', message='删除成功')
-            DataSource.delData(self.data.id, DataSource.tmpData)
+            DataSet.delData(self.data.id, DataSet.tmpData)
             self.data = None
             self.setData()
         else:
@@ -337,11 +338,11 @@ def about():
     root.title("关于")
     root.geometry("300x200")
     root.resizable(0, 0)
-    str = 'Author: Ackerven\n'
-    str += '本项目开源，遵循GPL3.0协议\n'
-    str += 'Github: https://ackerven/pycontact'
+    strs = 'Author: Ackerven\n'
+    strs += '本项目开源，遵循GPL3.0协议\n'
+    strs += 'Github: https://ackerven/pycontact'
     w = tk.Message(root)
-    w.config(text=str)
+    w.config(text=strs)
     w['anchor'] = tk.CENTER
     w['aspect'] = 300
     w.place(relx=0, rely=0, relwidth=1, relheight=1)
@@ -353,8 +354,8 @@ def importData():
     filePath = askopenfilename(filetypes=[('csv文件', '.csv'),('xlsx文件', '.xlsx')])
     fileType = filePath.split('.')[-1]
     overlay = askyesno(title='导入', message='是否覆盖原有的数据')
-    controller.importData(DataSource.data, filePath, fileType, overlay=overlay)
-    DataSource.change = True
+    controller.importData(DataSet.data, filePath, fileType, overlay=overlay)
+    DataSet.change = True
     showinfo(title='导入', message='导入成功')
 
 
@@ -362,14 +363,14 @@ def importData():
 def exportData():
     filePath = askopenfilename(filetypes=[('csv文件', '.csv'), ('xlsx文件', '.xlsx')], defaultextension='.csv')
     fileType = filePath.split('.')[-1]
-    controller.export(DataSource.data, filePath, fileType)
-    DataSource.change = True
+    controller.export(DataSet.data, filePath, fileType)
+    DataSet.change = True
     showinfo(title='导出', message='导出成功')
 
 def gui():
     # 初始化
     data = controller.init()
-    DataSource(data)
+    DataSet(data)
 
     # 创建主窗口并设置属性
     root = tk.Tk()
