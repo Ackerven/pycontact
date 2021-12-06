@@ -370,9 +370,12 @@ def importData():
 def exportData():
     filePath = asksaveasfilename(filetypes=[('csv文件', '.csv'), ('xlsx文件', '.xlsx')], defaultextension='.csv', initialfile='default')
     fileType = filePath.split('.')[-1]
-    controller.export(DataSet.data, filePath, fileType)
-    DataSet.change = True
-    showinfo(title='导出', message='导出成功')
+    try:
+        controller.export(DataSet.data, filePath, fileType)
+        DataSet.change = True
+        showinfo(title='导出', message='导出成功')
+    except:
+        showinfo(title='导出', message='导出失败')
 
 def gui():
     # 初始化
