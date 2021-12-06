@@ -8,6 +8,7 @@
 
 import pymysql
 import yaml
+
 from model.contact import Contact
 
 file = open('config.yaml', 'r', encoding='utf-8')
