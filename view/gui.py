@@ -40,7 +40,7 @@ class DataSet:
                 return
 
 
-# 菜单栏
+# 菜单栏 Check
 def Meun(root):
     # 创建主菜单栏
     menubar = tk.Menu(root)
@@ -65,13 +65,14 @@ def Meun(root):
     root['menu'] = menubar
 
 
-# 搜索框
+# 搜索框 checkout
 class SearchFrame(tk.Frame):
     def __init__(self, listBox, master=None):
         tk.Frame.__init__(self, master)
         self.listBox = listBox
         self.createWidgets()
 
+    # 创建框架
     def createWidgets(self):
         # 添加控件
         # 添加多选框
@@ -103,9 +104,6 @@ class SearchFrame(tk.Frame):
                 key = key[0:-1]
         except:
             pass
-        # print("field = {}, key = {}, fuzzy = {}".format(field_dic[field], key, fuzzy))
-        # print(type(key))
-        # print(type(key), 'key=',key)
         if key == '':
             self.listBox.setData()
         else:
@@ -126,9 +124,8 @@ class DataFrame(tk.Frame):
         self.createWidgets()
         self.listBox.bind("<Enter>", self.updateList)
         self.listBox.bind("<Double-Button-1>", self.showDetail)
-        # self.listBox.bind("<KeyPress-Up>", self.showDetail)
-        # self.listBox.bind("<KeyPress-Down>", self.showDetail)
 
+    # 创建列表
     def createWidgets(self):
         # 列表框
         self.setData()
@@ -136,9 +133,10 @@ class DataFrame(tk.Frame):
 
         # 提示信息
         # self.labShow['bg'] = 'red'
-        self.labShow['text'] = '{}个联系人'.format(len(DataSet.data))
+        self.labShow['text'] = '{}个联系人'.format(self.listBox.size())
         self.labShow.place(relx=0.045, rely=0.95, relwidth=0.9, relheight=0.05)
 
+    # 设置列表显示的数据
     def setData(self, result=None):
         self.listBox.delete(0, tk.END)
         if result is None:
@@ -149,19 +147,18 @@ class DataFrame(tk.Frame):
             self.listBox.insert(tk.END, i.name)
         self.labShow['text'] = '{}个联系人'.format(self.listBox.size())
 
+    # 更新列表的数据
     def updateList(self, event):
-        print('calling updateList...')
         if DataSet.change:
             DataSet.change = False
-            self.listBox.delete(0, tk.END)
-            # self.tmpData = self.data
+            self.listBox.delete(0, tk.END)  # 清空列表
             for i in DataSet.tmpData:
-                self.listBox.insert(tk.END, i.name)
+                self.listBox.insert(tk.END, i.name) # 插入数据
             self.labShow['text'] = '{}个联系人'.format(self.listBox.size())
 
+    # 双击时显示详细数据
     def showDetail(self, event):
         for i in self.listBox.curselection():
-            # print(type(self.listBox.get(i)), self.listBox.get(i))
             self.info.setData(DataSet.tmpData[i])
 
 
@@ -176,8 +173,6 @@ class InfoFrame(tk.Frame):
         self.addN = tk.Button(self, text='取消', command=lambda: self.cancel("ADD"))
         self.updateY = tk.Button(self, text='确定', command=self.updateContact)
         self.updateN = tk.Button(self, text='取消', command=lambda: self.cancel("UPDATE"))
-        self.data = None
-        self.changeData = None
         self.name = None
         self.phone = None
         self.gValue = tk.StringVar(self)
@@ -186,6 +181,7 @@ class InfoFrame(tk.Frame):
         self.wx = None
         self.createDefaultWidgets()
 
+    # 创建默认信息栏
     def createDefaultWidgets(self):
         name = tk.Label(self, text='姓名: ', anchor=tk.E)
         # name['bg'] = 'red'
@@ -204,6 +200,7 @@ class InfoFrame(tk.Frame):
         self.update.place(relx=0.32, rely=0.85, relwidth=0.25, relheight=0.1)
         self.delete.place(relx=0.60, rely=0.85, relwidth=0.25, relheight=0.1)
 
+    # 根据事件调整UI
     def createEventWidgets(self, eventType):
         nameValue = tk.StringVar(self)
         self.name = tk.Entry(self, textvariable=nameValue)
@@ -237,6 +234,7 @@ class InfoFrame(tk.Frame):
             self.updateN.place(relx=0.20, rely=0.85, relwidth=0.25, relheight=0.1)
             self.updateY.place(relx=0.50, rely=0.85, relwidth=0.25, relheight=0.1)
 
+    # 根据事件调整详细信息UI
     def createInfoWidgets(self):
         nameValue = tk.Label(self, anchor=tk.W)
         # name['bg'] = 'red'
@@ -261,11 +259,13 @@ class InfoFrame(tk.Frame):
             phoneValue['text'] = self.data.phone
             wxValue['text'] = self.data.wx_code
 
+    # 设置信息栏显示的数据
     def setData(self, data=None):
         if data is not None:
             self.data = data
         self.createInfoWidgets()
 
+    # 添加联系人事件
     def addContact(self):
         name = self.name.get()
         gender = self.gValue.get()
@@ -279,15 +279,11 @@ class InfoFrame(tk.Frame):
                 controller.add(DataSet.data, Contact(name, gender, phone, wx))
             DataSet.change = True
             showinfo(title='添加', message='添加成功')
-            self.setData()
-            self.addN.place(relx=0, rely=0, relwidth=0, relheight=0)
-            self.addY.place(relx=0, rely=0, relwidth=0, relheight=0)
-            self.add.place(relx=0.04, rely=0.85, relwidth=0.25, relheight=0.1)
-            self.update.place(relx=0.32, rely=0.85, relwidth=0.25, relheight=0.1)
-            self.delete.place(relx=0.60, rely=0.85, relwidth=0.25, relheight=0.1)
+            self.recover()
         else:
             showerror(title='添加', message='电话号码错误')
 
+    # 更新联系人事件
     def updateContact(self):
         name = self.name.get()
         gender = self.gValue.get()
@@ -300,15 +296,20 @@ class InfoFrame(tk.Frame):
             self.data.wx_code = wx
             controller.modify(DataSet.data, self.data.id, name, gender, phone, wx)
             showinfo(title='修改', message='修改成功')
-            self.setData()
-            self.updateN.place(relx=0, rely=0, relwidth=0, relheight=0)
-            self.updateY.place(relx=0, rely=0, relwidth=0, relheight=0)
-            self.add.place(relx=0.04, rely=0.85, relwidth=0.25, relheight=0.1)
-            self.update.place(relx=0.32, rely=0.85, relwidth=0.25, relheight=0.1)
-            self.delete.place(relx=0.60, rely=0.85, relwidth=0.25, relheight=0.1)
+            self.recover()
         else:
             showerror(title='修改', message='电话号码错误')
 
+    # 更新或者添加成功后按钮复原
+    def recover(self):
+        self.setData()
+        self.updateN.place(relx=0, rely=0, relwidth=0, relheight=0)
+        self.updateY.place(relx=0, rely=0, relwidth=0, relheight=0)
+        self.add.place(relx=0.04, rely=0.85, relwidth=0.25, relheight=0.1)
+        self.update.place(relx=0.32, rely=0.85, relwidth=0.25, relheight=0.1)
+        self.delete.place(relx=0.60, rely=0.85, relwidth=0.25, relheight=0.1)
+
+    # 取消按钮事件
     def cancel(self, eventType):
         if eventType == 'ADD':
             self.addN.place(relx=0, rely=0, relwidth=0, relheight=0)
@@ -321,6 +322,7 @@ class InfoFrame(tk.Frame):
         self.update.place(relx=0.32, rely=0.85, relwidth=0.25, relheight=0.1)
         self.delete.place(relx=0.60, rely=0.85, relwidth=0.25, relheight=0.1)
 
+    # 删除联系人事件
     def delete(self):
         if controller.delete(DataSet.data, self.data.id):
             DataSet.change = True
