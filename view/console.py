@@ -22,6 +22,7 @@ def menu():
     print("5. 导入联系人")
     print("6. 导出联系人")
     print("7. 列出所有联系人")
+    print("8. 同步数据")
     print("0. 退出")
 
 
@@ -204,6 +205,10 @@ def showData(data):
         for i in data:
             print(i)
 
+# 同步数据到磁盘
+def snyc(data):
+    controller.save(data)
+
 
 def console():
     data = controller.init()
@@ -224,6 +229,8 @@ def console():
             exportContact(data)
         elif choose == 7:
             showData(data)
+        elif choose == 8:
+            snyc(data)
         elif choose == 0:
             break
         else:
