@@ -49,6 +49,7 @@ def Meun(root):
     menufile = tk.Menu(menubar, tearoff=0)
     # menuset = tk.Menu(menubar, tearoff=0)
     menuhelp = tk.Menu(menubar, tearoff=0)
+    menusnyc = tk.Menu(menubar, tearoff=0)
 
     # 把菜单作为层叠菜单添加到主菜单
     menubar.add_cascade(label='文件', menu=menufile)
@@ -60,6 +61,7 @@ def Meun(root):
     menufile.add_command(label='导出', command=exportData)
     # menuset.add_command(label='数据源')
     menuhelp.add_command(label='关于', command=about)
+    menufile.add_command(label='同步数据', command=snyc)
 
     # 把菜单栏添加到根窗口
     root['menu'] = menubar
@@ -391,6 +393,12 @@ def exportData():
     except:
         showinfo(title='导出', message='导出失败')
 
+
+#
+def snyc():
+    controller.save(DataSet.data)
+
+
 def gui():
     # 初始化
     data = controller.init()
@@ -422,4 +430,4 @@ def gui():
 
     root.mainloop()
 
-    controller.save(data)
+    controller.save(DataSet.data)
