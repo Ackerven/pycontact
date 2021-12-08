@@ -396,7 +396,11 @@ def exportData():
 
 #
 def snyc():
-    controller.save(DataSet.data)
+    try:
+        controller.save(DataSet.data)
+        showinfo(title='同步', message='同步成功')
+    except:
+        showinfo(title='同步', message='同步失败')
 
 
 def gui():
