@@ -8,7 +8,8 @@
 
 import os
 import re
-
+import logging
+import sys
 import yaml
 
 import utils.csv as csv
@@ -26,6 +27,7 @@ if config['mode']['data'] != 'db':
 
 # 程序启动初始化函数
 def init():
+    initLogger()
     if config['mode']['data'] == 'db':
         data = db.queryAll()
         print("Successfully loading project!")
@@ -51,6 +53,11 @@ def init():
             print("Enjoy yourself! ")
             return []
 
+
+def initLogger():
+    print('initLogger()')
+    logformat = "[%(levelname)s] %(asctime)s %(message)s"
+    logging.basicConfig(level=config['Logger']['level'], format=logformat)
 
 # 添加功能
 def add(data, tmp):

@@ -15,6 +15,7 @@ import utils.controller as controller
 import utils.mysql as db
 import utils.tool as tool
 from model.contact import Contact
+from utils.tool import myLogger
 
 file = open('config.yaml', 'r', encoding='utf-8')
 config = yaml.load(file, Loader=yaml.FullLoader)
@@ -33,6 +34,7 @@ class DataSet:
         DataSet.tmpData = data
 
     @staticmethod
+    @myLogger('INFO', 'Calling DataSet::delData()...')
     def delData(cid, dataSet):
         for i in range(len(dataSet)):
             if dataSet[i].id == cid:
@@ -41,6 +43,7 @@ class DataSet:
 
 
 # 菜单栏 Check
+@myLogger('INFO', 'Calling Menu()...')
 def Meun(root):
     # 创建主菜单栏
     menubar = tk.Menu(root)
@@ -75,6 +78,7 @@ class SearchFrame(tk.Frame):
         self.createWidgets()
 
     # 创建框架
+    @myLogger('INFO', 'Calling SearchFrame::createWidgets()...')
     def createWidgets(self):
         # 添加控件
         # 添加多选框
@@ -98,6 +102,7 @@ class SearchFrame(tk.Frame):
         w1.bind("<KeyPress>", lambda event: self.search(event.char, vom.get(), vKey.get(), vcb.get()))
 
     # 搜索框事件
+    @myLogger('INFO', 'Calling SearchFrame::search()...')
     def search(self, lastChar, field, key, fuzzy):
         try:
             if lastChar.isalnum():
@@ -128,6 +133,7 @@ class DataFrame(tk.Frame):
         self.listBox.bind("<Double-Button-1>", self.showDetail)
 
     # 创建列表
+    @myLogger('INFO', 'Calling DataFrame::createWidgets()...')
     def createWidgets(self):
         # 列表框
         self.setData()
@@ -139,6 +145,7 @@ class DataFrame(tk.Frame):
         self.labShow.place(relx=0.045, rely=0.95, relwidth=0.9, relheight=0.05)
 
     # 设置列表显示的数据
+    @myLogger('INFO', 'Calling DataFrame::createWidgets()...')
     def setData(self, result=None):
         self.listBox.delete(0, tk.END)
         if result is None:
@@ -150,15 +157,17 @@ class DataFrame(tk.Frame):
         self.labShow['text'] = '{}个联系人'.format(self.listBox.size())
 
     # 更新列表的数据
+    @myLogger('INFO', 'Calling DataFrame::updateList()...')
     def updateList(self, event):
         if DataSet.change:
             DataSet.change = False
             self.listBox.delete(0, tk.END)  # 清空列表
             for i in DataSet.tmpData:
-                self.listBox.insert(tk.END, i.name) # 插入数据
+                self.listBox.insert(tk.END, i.name)  # 插入数据
             self.labShow['text'] = '{}个联系人'.format(self.listBox.size())
 
     # 双击时显示详细数据
+    @myLogger('INFO', 'Calling DataFrame::showDetail()...')
     def showDetail(self, event):
         for i in self.listBox.curselection():
             self.info.setData(DataSet.tmpData[i])
@@ -185,6 +194,7 @@ class InfoFrame(tk.Frame):
         self.createDefaultWidgets()
 
     # 创建默认信息栏
+    @myLogger('INFO', 'Calling InfoFrame::createDefaultWidgets()...')
     def createDefaultWidgets(self):
         name = tk.Label(self, text='姓名: ', anchor=tk.E)
         # name['bg'] = 'red'
@@ -204,6 +214,7 @@ class InfoFrame(tk.Frame):
         self.delete.place(relx=0.60, rely=0.85, relwidth=0.25, relheight=0.1)
 
     # 根据事件调整UI
+    @myLogger('INFO', 'Calling InfoFrame::createEventWidgets()...')
     def createEventWidgets(self, eventType):
         nameValue = tk.StringVar(self)
         self.name = tk.Entry(self, textvariable=nameValue)
@@ -238,6 +249,7 @@ class InfoFrame(tk.Frame):
             self.updateY.place(relx=0.50, rely=0.85, relwidth=0.25, relheight=0.1)
 
     # 根据事件调整详细信息UI
+    @myLogger('INFO', 'Calling InfoFrame::createInfoWidgets()...')
     def createInfoWidgets(self):
         nameValue = tk.Label(self, anchor=tk.W)
         # name['bg'] = 'red'
@@ -263,12 +275,14 @@ class InfoFrame(tk.Frame):
             wxValue['text'] = self.data.wx_code
 
     # 设置信息栏显示的数据
+    @myLogger('INFO', 'Calling InfoFrame::setData()...')
     def setData(self, data=None):
         if data is not None:
             self.data = data
         self.createInfoWidgets()
 
     # 添加联系人事件
+    @myLogger('INFO', 'Calling InfoFrame::addContact()...')
     def addContact(self):
         name = self.name.get()
         gender = self.gValue.get()
@@ -287,6 +301,7 @@ class InfoFrame(tk.Frame):
             showerror(title='添加', message='电话号码错误')
 
     # 更新联系人事件
+    @myLogger('INFO', 'Calling InfoFrame::updateContact()...')
     def updateContact(self):
         name = self.name.get()
         gender = self.gValue.get()
@@ -304,6 +319,7 @@ class InfoFrame(tk.Frame):
             showerror(title='修改', message='电话号码错误')
 
     # 更新或者添加成功后按钮复原
+    @myLogger('INFO', 'Calling InfoFrame::recover()...')
     def recover(self, typeEvent):
         self.setData()
         if typeEvent == 'ADD':
@@ -317,6 +333,7 @@ class InfoFrame(tk.Frame):
         self.delete.place(relx=0.60, rely=0.85, relwidth=0.25, relheight=0.1)
 
     # 取消按钮事件
+    @myLogger('INFO', 'Calling InfoFrame::cancel()...')
     def cancel(self, eventType):
         if eventType == 'ADD':
             self.addN.place(relx=0, rely=0, relwidth=0, relheight=0)
@@ -330,6 +347,7 @@ class InfoFrame(tk.Frame):
         self.delete.place(relx=0.60, rely=0.85, relwidth=0.25, relheight=0.1)
 
     # 删除联系人事件
+    @myLogger('INFO', 'Calling InfoFrame::delete()...')
     def delete(self):
         confirm = askyesno(title='删除', message='确定删除')
         if not confirm:
@@ -345,6 +363,7 @@ class InfoFrame(tk.Frame):
 
 
 # 关于
+@myLogger('INFO', 'Calling about()...')
 def about():
     root = tk.Tk()
     root.title("关于")
@@ -362,6 +381,7 @@ def about():
 
 
 # 导入
+@myLogger('INFO', 'Calling importData()...')
 def importData():
     filePath = ''
     fileType = ''
@@ -380,8 +400,8 @@ def importData():
         showinfo(title='导入', message='导入失败')
 
 
-
 # 导出
+@myLogger('INFO', 'Calling exportData()...')
 def exportData():
     try:
         filePath = asksaveasfilename(filetypes=[('csv文件', '.csv'), ('xlsx文件', '.xlsx')], defaultextension='.csv',
@@ -394,7 +414,7 @@ def exportData():
         showinfo(title='导出', message='导出失败')
 
 
-#
+@myLogger('INFO', 'Calling snyc()...')
 def snyc():
     try:
         controller.save(DataSet.data)
@@ -403,6 +423,7 @@ def snyc():
         showinfo(title='同步', message='同步失败')
 
 
+@myLogger('INFO', 'Calling gui()...')
 def gui():
     # 初始化
     data = controller.init()

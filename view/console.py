@@ -9,10 +9,11 @@
 import utils.controller as controller
 import utils.tool as tool
 from model.contact import Contact
-import utils.mysql as db
+from utils.tool import myLogger
 
 
 # 菜单
+@myLogger('INFO', 'Calling menu()...')
 def menu():
     print("---" * 10 + 'Contact by Ackerven' + '---' * 10)
     print("1. 添加联系人")

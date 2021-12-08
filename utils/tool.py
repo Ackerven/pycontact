@@ -10,6 +10,8 @@ import re
 
 import pandas as pd
 
+import logging
+
 from model.contact import Contact
 
 
@@ -45,3 +47,40 @@ def dfToObject(df):
     for i in range(len(df)):
         data.append(Contact(df.loc[i][1], df.loc[i][2], str(df.loc[i][3]), df.loc[i][4]))
     return data
+
+
+def myLogger(level, msg):
+    def showLog(func):
+        def wrapper(*args):
+            if level == 'DEBUG':
+                logging.debug(msg=msg)
+            elif level == 'INFO':
+                print('INFO...')
+                logging.info(msg=msg)
+            elif level == 'WARNING':
+                logging.warning(msg=msg)
+            elif level == 'ERROR':
+                logging.error(msg=msg)
+            elif level == 'CRITICAL':
+                logging.critical(msg=msg)
+            # logging.log(level=level, msg=msg)
+
+            if len(args) == 0:
+                func()
+            elif len(args) == 1:
+                func(args[0])
+            elif len(args) == 2:
+                func(args[0], args[1])
+            elif len(args) == 3:
+                func(args[0], args[1], args[2])
+            elif len(args) == 4:
+                func(args[0], args[1], args[2], args[3])
+            elif len(args) == 5:
+                func(args[0], args[1], args[2], args[3], args[4])
+            elif len(args) == 6:
+                func(args[0], args[1], args[2], args[3], args[4], args[5])
+            elif len(args) == 7:
+                func(args[0], args[1], args[2], args[3], args[4], args[5], args[6])
+
+        return wrapper
+    return showLog
